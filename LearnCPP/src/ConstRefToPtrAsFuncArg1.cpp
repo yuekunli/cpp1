@@ -1,4 +1,5 @@
-#include "LibHeaders.h"
+#include<iostream>
+#include<memory>
 
 namespace ConstRefToPtrAsFuncArg1{
 

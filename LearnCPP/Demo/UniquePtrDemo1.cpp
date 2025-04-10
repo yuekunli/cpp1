@@ -1,4 +1,11 @@
-#include "LibHeaders.h"
+#include<iostream>
+#include<list>
+#include<fstream>
+#include<vector>
+#include<assert.h>
+#include<memory>
+#include<functional>
+
 
 namespace UniquePtrDemo1 {
 struct B

@@ -5,7 +5,7 @@
 
 #include "NonTemplClassSeparateDeclDef1.h"
 
-
+#include<iostream>
 
 // Vector1.cpp  --   full implementation of a template class
 // Vector1.h    --   Empty

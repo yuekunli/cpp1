@@ -41,7 +41,7 @@ int main()
 
     //RvalueRefToLvalueRef1::Test_RvalueRefToLvalueRef1();
 
-    //SortedSet1::Test_SortedSet1();
+    SortedSet1::Test_SortedSet1();
 
     //TrailingReturnType1::Test_TrailingReturnType1();
 
@@ -55,7 +55,7 @@ int main()
 
     //OperatorOverload1::Test_OperatorOverload1();
 
-    Specialized_Template1::Test_Specialized_Template1();
+    //Specialized_Template1::Test_Specialized_Template1();
 
 
 

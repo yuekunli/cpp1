@@ -125,9 +125,147 @@ namespace _0152_Maximum_Product_Subarray {
 		}
 	};
 
+	/**
+	* This solution only deals with arrays without zero.
+	* The idea is the same with the first solution.
+	* When there are odd number of negative numbers, the max product is either the subarray from left to the element before the last negative
+	* or the subarray from the right to the element after the first negative element.
+	* X X X X X X X - X X X X X X X X X X X X X X X X X X X - X X X X X X X X
+	*               |                                       |
+	*             first negative                           last negative
+	* |---------------------------------------------------|
+	*                 |-----------------------------------------------------|
+	* Max product comes from either one of these two segments.
+	*/
+	class SolutionArrayNoZero
+	{
+	public:
+		int maxProduct(vector<int>& n)
+		{
+			if (n.size() == 1)
+			{
+				return n[0];
+			}
+
+			int productLeftToRight = 0;
+			int productRightToLeft = 0;
+			int lastPositiveProduct = 0;
+			int currentProduct = 1;
+			size_t l = n.size();
+
+			for (size_t i = 0; i < l; ++i)
+			{
+				currentProduct *= n[i];
+				if (currentProduct > lastPositiveProduct)
+				{
+					lastPositiveProduct = currentProduct;
+				}
+			}
+
+			productLeftToRight = lastPositiveProduct;
+
+			// 1 <= n.length <= 2 * 10^4
+			// because of this constraint, I can use "int" to index the vector
+
+			lastPositiveProduct = 0;
+			currentProduct = 1;
+
+			for (int i = (int)(n.size()-1); i >= 0; --i)
+			{
+				currentProduct *= n[i];
+				if (currentProduct > lastPositiveProduct)
+				{
+					lastPositiveProduct = currentProduct;
+				}
+			}
+			productRightToLeft = lastPositiveProduct;
+
+			return max(productLeftToRight, productRightToLeft);
+		}
+	};
+
+
+	/**
+	* Build on top of SolutionArrayNoZero.
+	* Further simplify that solution and deal with zeros
+	* verified 0ms beats 100%
+	*/
+	class Solution3
+	{
+	public:
+		int maxProduct(vector<int> n)
+		{
+			size_t l = n.size();
+			if (l == 1)
+			{
+				return n[0];
+			}
+
+			size_t firstNonZero = 0;
+			while (firstNonZero < l && n[firstNonZero] == 0)
+			{
+				++firstNonZero;
+			}
+
+			if (firstNonZero == l)
+			{
+				return 0;
+			}
+
+			int currentProduct = 1;
+			int maxLeftToRight = 0, maxRightToLeft = 0;
+			int finalAnswer = 0;
+			size_t segmentStart = firstNonZero + 1;
+			for (size_t i = firstNonZero; i < l; ++i)
+			{
+				if (n[i] != 0)
+				{
+					currentProduct *= n[i];
+					maxLeftToRight = max(maxLeftToRight, currentProduct);
+				}
+				
+				if (n[i] == 0 || i == l-1)
+				{
+					currentProduct = 1;
+					// where to start calculation from right to left?
+					// it depends on whether 'i' is pointing at a zero.
+					// If it is pointing at a zero, then start from the one to its left
+					// If it is pointing at the last element and that element is not zero,
+					// start from that element because that element is the real segment end.
+					int j = 0;
+					if (n[i] == 0)
+					{
+						j = i - 1;
+					}
+					if (n[i] != 0 && i == l - 1)
+					{
+						j = i;
+					}
+					while( j >= segmentStart)
+					{
+						currentProduct *= n[j];
+						maxRightToLeft = max(maxRightToLeft, currentProduct);
+						--j;
+					}
+
+					finalAnswer = max(finalAnswer, max(maxRightToLeft, maxLeftToRight));
+					currentProduct = 1;
+					maxLeftToRight = maxRightToLeft = 0;
+					segmentStart = i + 1;
+					// more logical action is to find the next non-zero element, in case multiple zeros in a row
+					// but setting segmentStart to i + 1 (albeit it can still be a zero) also works
+				}
+			}
+			return finalAnswer;
+		}
+	};
+
+
 	void Test_0152_Maximum_Product_Subarray()
 	{
-		Solution solu;
+		Solution solu1;
+		//SolutionArrayNoZero solu2;
+		Solution3 solu3;
 
 		string s;
 		vector<int>nums;
@@ -142,7 +280,9 @@ namespace _0152_Maximum_Product_Subarray {
 			stringstream ss(s);
 			nums.clear();
 			copy(istream_iterator<int>(ss), istream_iterator<int>(), back_inserter(nums));
-			cout << "answer: " << solu.maxProduct(nums) << "\n\n";
+			cout << "Solution1 answer: " << solu1.maxProduct(nums) << "\n";
+			//cout << "SolutionArrayNoZero answer: " << solu2.maxProduct(nums) << "\n\n";
+			cout << "Solution3 answer: " << solu3.maxProduct(nums) << "\n\n";
 		}
 	}
 }

@@ -1,4 +1,3 @@
-#include "LibHeaders.h"
 
 namespace ConstPointer1 {
 

@@ -1,4 +1,5 @@
-#include "LibHeaders.h"
+//#include "LibHeaders.h"
+#include<vector>
 #include "VectorSeparateDeclareDefine1.h"
 
 namespace VectorSeparateDeclareDefine1 {
@@ -193,19 +194,6 @@ typename Vector<Object>::const_iterator Vector<Object>::end() const
 {
 	return &objects[size()];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

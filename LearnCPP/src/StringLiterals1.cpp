@@ -1,4 +1,5 @@
-﻿#include "LibHeaders.h"
+﻿#include<iostream>
+#include<string>
 
 namespace StringLiterals1 {
 

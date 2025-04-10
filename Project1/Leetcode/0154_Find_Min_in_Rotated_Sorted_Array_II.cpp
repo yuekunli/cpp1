@@ -31,7 +31,7 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 	*            /
 	*           /
 	*                    |
-	*                    a points to here. the surrounding elements doesn't provide any help in terms of where the minimum is.
+	*                    a points to here. the surrounding elements don't provide any help in terms of where the minimum is.
 	* 
 	*/
 
@@ -103,14 +103,160 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 
 
 
+	/**
+	*                   .
+	*                 . .
+	*               . . .
+	*           . . . . .
+	*     . . . . . . . .
+	*   . . . . . . . . .
+	*   . . . . . . . . .     .
+	*   . . . . . . . . .   . .
+	*   . . . . . . . . . . . .
+	* 
+	*   |<------------->| |<->|
+	*     uphill            truth segment
+	*   
+	*   Very likely that the minimum is rotated to the back of the array.
+	*   Call the first ascending segment "uphill segment.
+	*   As long as I'm in the uphill segment, I should keep moving to the right.
+	*   What will make this a wrong decision?
+	*   Only when the rotations shift the array back to its original position (as if there is no rotation)
+	*   the minimum is the first element, the entire array is one uphill segment.
+	*   The handling of such corner case is to keep moving to the right and if I'm standing on the last element,
+	*   make sure to compare the last and the first element.
+	* 
+	*   I start at the first element, jump to the middle, compare the preivous position (first element in this case) with the current position.
+	*   If current is strictly greater than the previous position, I must be still in uphill segment. Abandon the left half, jump half of the remaining array.
+	* 
+	*	If current is equal previous position, it's hard to tell.
+	* 
+	*   . . .     . . . . . . .
+	*   . . .   . . . . . . . .
+	*   . . . . . . . . . . . .
+	* 
+	*               ^
+	*              mid
+	* 
+	*   There is an extreme case:
+	*   5 5 5 5 5 5 5 1 5 5 5 5 5 5 5 5 5.....5 5 5 5 5 
+	* 
+	* 
+	*   The array has many many 5's and only one 1.
+	*/
+
+	// verified 0ms beats 100%
+
+	class Solution2
+	{
+		int solve(vector<int> const& n, size_t lo, size_t hi)
+		{
+			size_t jumpTo = 0;
+
+			while (true)
+			{
+				if (lo == hi)
+				{
+					return n[lo];
+				}
+
+				if (lo + 1 == hi)
+				{
+					return min(n[lo], n[hi]);
+				}
+
+				if (n[lo] < n[hi])
+				{
+					return n[lo];
+				}
+
+
+				jumpTo = (hi - lo) / 2 + lo;
+
+				if (n[jumpTo - 1] > n[jumpTo] && n[jumpTo] <= n[jumpTo + 1])  // do I know jumpTo must not be the first or last?
+				{                                                            // in another word, how do I know jumpTo-1 and jumpTo+1 don't underflow or overflow?
+
+					// n[jumpTo] <= n[jumpTo + 1]
+					// the "equal" in this condition is very important
+					// example: 2 2 1 1 1
+					// jumpTo point to right the middle, which is the original first element before rotation
+					return n[jumpTo];
+				}
+
+
+				if (n[lo] < n[jumpTo])
+				{
+					lo = jumpTo + 1;
+					continue;
+				}
+
+				if (n[lo] > n[jumpTo])
+				{
+					hi = jumpTo - 1;
+					continue;
+				}
+
+				if (n[lo] == n[jumpTo])
+				{
+					// I'm in the "I-don't-know-where-to-go" case. I can just solve both halves now
+					// but in order to reduce operations to my best effort
+					// I can check some special cases.
+					if (n[jumpTo] > n[hi])
+					{
+						/*
+						*   - - - - - - - - - - - - - 
+						*                                      -
+						*                                    /
+						*                                   /
+						*                                  /
+						*                                 -
+						*                               /
+						*                             -
+						*  |----uphill---------------|-----truth--|
+						*                      |
+						*                   jumpTo
+						*/
+
+						lo = jumpTo + 1;
+						continue;
+
+					}
+					else
+					{
+						int b1 = solve(n, lo, jumpTo);
+						int b2 = solve(n, jumpTo + 1, hi);
+						return min(b1, b2);
+					}
+				}
+			}
+		}
+
+
+	public:
+		int findMin(vector<int>& n)
+		{
+			return solve(n, 0, n.size() - 1);
+		}
+	};
+
+
+
+	template<typename SolutionType>
 	class AutoTest
 	{
 		random_device rd;
 		mt19937 gen;
 		uniform_int_distribution <int> uid;
-		Solution s;
+		SolutionType & s;
 	public:
-		AutoTest() :gen(rd()), uid(1, 2) {}
+		AutoTest(SolutionType & _s)
+			:gen(rd()),
+			uid(1, 2),
+			s(_s)
+		{}
+
+		AutoTest() = delete;
+
 		void generateArray(vector<int>& arr)
 		{
 			arr.assign(10,0);
@@ -128,7 +274,18 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 			{
 				generateArray(a);
 				int correct = *min_element(a.begin(), a.end());
-				int test = s.findMin(a);
+				int test = 0;
+				try
+				{
+					test = s.findMin(a);
+				}
+				catch (std::runtime_error e)
+				{
+					copy(a.begin(), a.end(), ostream_iterator<int>(std::cout, " "));
+					cout << "\n";
+					cout << test << "\n\n";
+					return;
+				}
 				if (test != correct)
 				{
 					copy(a.begin(), a.end(), ostream_iterator<int>(std::cout, " "));
@@ -144,8 +301,8 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 
 	void Test_0154_Find_Min_in_Rotated_Sorted_Array_II()
 	{
-		Solution s;
-		AutoTest ats;
+		Solution2 s;
+		AutoTest ats{s};
 		string s1;
 		vector<int>nums;
 		int option;

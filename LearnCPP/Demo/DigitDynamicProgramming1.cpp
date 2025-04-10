@@ -1,4 +1,7 @@
-#include "LibHeaders.h"
+#include<vector>
+#include<iostream>
+#include<iomanip>
+
 
 namespace DigitDynamicProgramming {
 

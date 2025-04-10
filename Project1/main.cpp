@@ -83,11 +83,11 @@ int main()
 
     //_0150_Evaluate_Reverse_Polish_Notation::Test_0150_Evaluate_Reverse_Polish_Notation();
 
-    _0152_Maximum_Product_Subarray::Test_0152_Maximum_Product_Subarray();
+    //_0152_Maximum_Product_Subarray::Test_0152_Maximum_Product_Subarray();
 
     //_0153_Find_Minimum_in_Rotated_Sorted_Array::Test_0153_Find_Minimum_in_Rotated_Sorted_Array();
 
-    //_0154_Find_Min_in_Rotated_Sorted_Array_II::Test_0154_Find_Min_in_Rotated_Sorted_Array_II();
+    _0154_Find_Min_in_Rotated_Sorted_Array_II::Test_0154_Find_Min_in_Rotated_Sorted_Array_II();
 
     //_0164_Maximum_Gap::Test_0164_Maximum_Gap();
 

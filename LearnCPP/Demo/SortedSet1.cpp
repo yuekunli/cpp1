@@ -1,4 +1,7 @@
-#include "LibHeaders.h"
+#include<set>
+#include<functional>
+#include<iostream>
+#include<chrono>
 
 namespace SortedSet1 {
 
@@ -36,7 +39,7 @@ public:
 
 const int nof_operations = 120;
 
-int set_emplace()
+size_t set_emplace()
 {
 	std::set<Dew>set;
 	for (int i = 0; i < nof_operations; i++)
@@ -53,7 +56,7 @@ int set_emplace()
 }
 
 
-int set_insert()
+size_t set_insert()
 {
 	std::set<Dew>set;
 	for (int i = 0; i < nof_operations; i++)
@@ -69,10 +72,10 @@ int set_insert()
 	return set.size();
 }
 
-void timeit(std::function<int()> set_test, std::string what = "")
+void timeit(std::function<size_t()> set_test, std::string what = "")
 {
 	auto start = std::chrono::system_clock::now();
-	int setsize = set_test();
+	size_t setsize = set_test();
 	auto stop = std::chrono::system_clock::now();
 	std::chrono::duration<double, std::milli> time = stop - start;
 
@@ -83,8 +86,6 @@ void timeit(std::function<int()> set_test, std::string what = "")
 
 void Test1()
 {
-	set_insert();
-
 	timeit(set_insert, "insert");
 	timeit(set_emplace, "emplace");
 	timeit(set_insert, "insert");
@@ -99,7 +100,7 @@ void Test1()
 
 const int count = 100500;
 
-int set_emplace2()
+size_t set_emplace2()
 {
 	std::set<int>set;
 	for (int i = 0; i < count; i++)
@@ -109,7 +110,7 @@ int set_emplace2()
 	return set.size();
 }
 
-int set_emplace_hint()
+size_t set_emplace_hint()
 {
 	std::set<int> set;
 
@@ -123,7 +124,7 @@ int set_emplace_hint()
 	return set.size();
 }
 
-int set_emplace_hint_wrong()
+size_t set_emplace_hint_wrong()
 {
 	std::set<int> set;
 
@@ -137,7 +138,7 @@ int set_emplace_hint_wrong()
 }
 
 
-int set_emplace_hint_corrected()
+size_t set_emplace_hint_corrected()
 {
 	std::set<int> set;
 	auto it = set.begin();
@@ -150,7 +151,7 @@ int set_emplace_hint_corrected()
 }
 
 
-int set_emplace_hint_closest()
+size_t set_emplace_hint_closest()
 {
 	std::set<int> set;
 	auto it = set.begin();
@@ -159,19 +160,21 @@ int set_emplace_hint_closest()
 		it = set.emplace_hint(it, i);
 	}
 
-	// this runs fast in fact. but it shouldn't if it strictly tries to insert *before* the given hint,
-	// because the to-be-inserted element is just greater than the one inserted in the last iteration.
-	// I think what actually happens is that "set" compares the to-be-inserted element with the hint,
+	// this runs fast in fact. but documentation (en.cppreference.com) says "amortized contant if the
+	// new element is inserted *just before* the hint". In this test, the new element is inserted just after the hint.
+	// 
+	// Perhaps, "set" compares the to-be-inserted element with the hint,
 	// if the to-be-inserted is greater, we go to the hint's successor, if the to-be-inserted is still greater,
 	// we keep going to the successor until we find the position to insert.
+	// 
 	// If the to-be-inserted is less than the hint, we go to hint's predecessor and repeat until we find proper position.
 	// "hint" basically serves as the start point for searching.
-
+	//
+	// However, documentation also says "logarithmic in the size of the container in general". If it searches from the hint
+	// one-by-one, doesn't it make it O(n) in general?
 
 
 	return set.size();
-
-
 }
 
 
@@ -188,12 +191,7 @@ void Test2()
 
 // ===================================
 // my example to test emplace_hint
-// "set" is supposed to maintain order
-// what if honoring the "hint" breaks the order?
-// It will insert the new entry but maintaining the order has higher priority
-// If the "hint" given is the correct place to insert, the complexity is constant amortized.
-// If the "hint" is incorrect, the complexity is just the same as insertion without hint
-// which is the complexity of insertion in a balanced binary search tree.
+// (not timed test, just simple functionality)
 // ===================================
 
 struct Alpha
@@ -208,7 +206,7 @@ public:
 		b = b1;
 	}
 
-	bool operator<(const Alpha& obj2) const  // Attention!!! There must be two "const", 
+	bool operator<(const Alpha& obj2) const  // Attention!!! There must be two "const"s, 
 		                                     // because when the "set" compares two Alpha objects, 
 		                                     // it will look for an implementation of operator< that takes const reference 
 		                                     // and doesn't modify passed in object
@@ -228,21 +226,19 @@ void Test3()
 	}
 
 	std::cout << "initial set:" << std::endl;
+
 	//for (auto it = alphaSet.begin(); it != alphaSet.end(); it++)  // this is also correct
 	//{
 	//	std::cout << it->a << " , " << it->b << std::endl;
 	//}
+
 	for (const Alpha& obj : alphaSet)
 	{
 		std::cout << obj.a << " , " << obj.b << std::endl;
 	}
 
 
-	auto it2 = alphaSet.begin();
-	while (it2->a != 40)
-	{
-		it2++;
-	}
+	auto it2 = alphaSet.find(Alpha{ 40,1 });
 
 	std::cout << "insert 70,2" << std::endl;
 	auto it3 = alphaSet.emplace_hint(it2, 70, 2);
@@ -251,9 +247,7 @@ void Test3()
 	//auto it3 = alphaSet.emplace_hint(it2, 35, 2);
 
 
-
 	std::cout << "result:  " << it3->a << " , " << it3->b << std::endl;
-
 
 
 	std::cout << "final set:" << std::endl;
@@ -264,16 +258,11 @@ void Test3()
 }
 
 
-
-
-
-
 void Test_SortedSet1()
 {
-
 	//Test1();
-	Test2();
-	//Test3();
+	//Test2();
+	Test3();
 
 	std::cout << std::endl;
 }

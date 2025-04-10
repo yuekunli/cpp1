@@ -1,6 +1,5 @@
 #pragma once
 
-#include "LibHeaders.h"
 #include "NonTemplClassSeparateDeclDef1.h"
 
 namespace NonTemplClassSeparateDeclDef1 {

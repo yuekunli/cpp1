@@ -13,11 +13,24 @@ namespace _0153_Find_Minimum_in_Rotated_Sorted_Array {
 	* In the above example:
 	* 1st round: lo: 5, hi: 4, mid: 2
 	* 2nd round: lo: 5, hi: 1, mid: 5
-	* When mid points at the last element, the minimum must be between first and last.
+	* When mid points at the last element, the minimum must be either the first or the last element.
 	* When mid points at the first element, the minimum may be neither the first nor the last.
 	* This is why condition (2) must have "&& (lo == hi)" part.
 	* Also because of this, i.e. mid can point at the first and minimum is to its right, condition (3) uses <= instead of <
 	*
+	* Note that if there is no rotation, for example: 2 5 8 9 11 15
+	* first round: mid points at the middle, by condition (3), "lo" moves up, next round "mid" moves to the right
+	* This actually moves mid farther away from the minimum, but eventually "mid" is going to point at the last element
+	* and "lo" and "hi" are going to overlap, execution will fall in condition (2).
+	* 
+	* A fast corner case check is this:
+	*  at the beginning of the function:
+	*	if (n[0] <= *n.rbegin())
+	*   {
+	*     return n[0];
+	*   }
+	* this takes care of "no rotation" and "single element array" cases.
+	* 
 	*/
 
 	class Solution
