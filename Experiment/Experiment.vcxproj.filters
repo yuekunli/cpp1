@@ -30,5 +30,8 @@
     <ClCompile Include="Get_Process_Name.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="active_directory_service_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

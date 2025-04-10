@@ -287,14 +287,15 @@ namespace Minimum_Spanning_Tree_With_Heap_Module {
 				ExternalData<Node>* eData = h.extract_min();
 				Node* n = eData->data;
 
-				if (eData->key_in_heap == INT_MAX) // the rest of the vetices are not connected
+				if (eData->key_in_heap == INT_MAX) // the rest of the vertices are not connected
 					break;
 
 				Node* p = n->tree_edge_source;
 
 				if (p != NULL)
-					tree.emplace_back(p, n, eData->key_in_heap);
-
+					tree.emplace_back(p, n, eData->key_in_heap); 
+											// the "key_in_heap" of the min element must be the weight of an edge that
+											// connects this node to a node that is already in the minimum-spanning-tree
 
 				if (h.len() == 0)
 					break;

@@ -44,7 +44,7 @@
     <ClCompile Include="Problems\Get_Kth_of_Two_Sorted_Arrays.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Problems\Merge_Two_Sorted_Arrays.cpp">
+    <ClCompile Include="Problems\Merge_Sort_Alternatives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Problems\Minimum_Heaviest_Set.cpp">
@@ -507,6 +507,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Leetcode\0152_Maximum_Product_Subarray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Problems\Post_Order_Traverse_Iterative.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Problems\Rotate_In_Place.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Problems\Optimal_Search_Tree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

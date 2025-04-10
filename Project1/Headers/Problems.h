@@ -36,8 +36,8 @@ namespace Search_Missing_In_Consecutive_Sorted_Array {
 
 
 
-namespace Merge_Two_Sorted_Arrays {
-	void Test_Merge_Two_Sorted_Arrays();
+namespace Merge_Two_Sorted_Arrays_With_Extra_Memory {
+	void Test_Merge_Two_Sorted_Arrays_With_Extra_Memory();
 }
 
 
@@ -52,4 +52,27 @@ namespace Minimum_Spanning_Tree {
 
 namespace Minimum_Spanning_Tree_With_Heap_Module {
 	void Test_Minimum_Spanning_Tree_With_Heap_Module();
+}
+
+namespace Post_Order_Traverse_Iterative {
+	void Test_Post_Order_Traverse_Iterative();
+}
+
+namespace Rotate_In_Place {
+	void Test_Rotate_In_Place();
+}
+
+namespace Merge_Sort_Iterative {
+	void Test_Merge_Sort_Iterative();
+}
+
+namespace Merge_In_Place {
+	void test();
+	void Test_Merge_In_Place();
+}
+
+namespace Optimal_Search_Tree {
+	void test_print_tree_neatly();
+	void test_optimal_search_tree();
+
 }

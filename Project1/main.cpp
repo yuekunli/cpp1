@@ -23,13 +23,25 @@ int main()
 
     //Search_Missing_In_Consecutive_Sorted_Array::Test_Search_Missing_In_Consecutive_Sorted_Array();
 
-    //Merge_Two_Sorted_Arrays::Test_Merge_Two_Sorted_Arrays();
-
     //Fenwick_Tree_Postfix_Range::Test_Fenwick_Tree_Postfix_Range();
 
     //Minimum_Spanning_Tree::Test_Minimum_Spanning_Tree();
 
     //Minimum_Spanning_Tree_With_Heap_Module::Test_Minimum_Spanning_Tree_With_Heap_Module();
+
+    //Post_Order_Traverse_Iterative::Test_Post_Order_Traverse_Iterative();
+
+    //Rotate_In_Place::Test_Rotate_In_Place();
+
+    //Merge_Two_Sorted_Arrays_With_Extra_Memory::Test_Merge_Two_Sorted_Arrays_With_Extra_Memory();
+
+    //Merge_Sort_Iterative::Test_Merge_Sort_Iterative();
+
+    //Merge_In_Place::Test_Merge_In_Place();
+
+    //Optimal_Search_Tree::test_print_tree_neatly();
+
+    Optimal_Search_Tree::test_optimal_search_tree();
 
     //-----------------------------------------------------------------------
 
