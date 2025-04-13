@@ -167,15 +167,20 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 
 				if (n[lo] < n[hi])
 				{
+					// the entire segment is in the uphill segment, so "lo" must be the minimum.
+					// This also eliminate the possiblity for the following code that when I keep moving toward the right side,
+					// the minimum is actually the first element.
 					return n[lo];
 				}
 
 
 				jumpTo = (hi - lo) / 2 + lo;
 
-				if (n[jumpTo - 1] > n[jumpTo] && n[jumpTo] <= n[jumpTo + 1])  // do I know jumpTo must not be the first or last?
-				{                                                            // in another word, how do I know jumpTo-1 and jumpTo+1 don't underflow or overflow?
-
+				if (n[jumpTo - 1] > n[jumpTo] && n[jumpTo] <= n[jumpTo + 1])  // How do I know jumpTo must not be the first or last?
+				{                                                             // in another word, how do I know jumpTo-1 and jumpTo+1 don't underflow or overflow?
+					                                                          // this relies on the first 3 condition checks, basically, 
+																			  // if jumpTo is at the either end of the array, "lo" and "hi" are either equal
+																			  // or differ by 1.
 					// n[jumpTo] <= n[jumpTo + 1]
 					// the "equal" in this condition is very important
 					// example: 2 2 1 1 1
@@ -200,7 +205,9 @@ namespace _0154_Find_Min_in_Rotated_Sorted_Array_II{
 				{
 					// I'm in the "I-don't-know-where-to-go" case. I can just solve both halves now
 					// but in order to reduce operations to my best effort
-					// I can check some special cases.
+					// I can check some special case. Basically comparing jumpTo with "hi" end.
+					// I only need to handle n[jumpTo] > n[hi]. I don't need to handle n[jumpTo] < n[hi]
+					// because if n[jumpTo] < n[hi], n[lo] is also less than n[hi] (the condition to reach here is that n[lo] == n[jumpTo])
 					if (n[jumpTo] > n[hi])
 					{
 						/*

@@ -116,6 +116,10 @@ namespace _0164_Maximum_Gap {
 	void Test_0164_Maximum_Gap();
 }
 
+namespace _0166_Fraction_to_Recurring_Decimal {
+	void Test_0166_Franction_to_Recurring_Decimal();
+}
+
 namespace _0174_Dungeon_Game {
 	void Test_0174_Dungeon_Game();
 }

@@ -48,7 +48,9 @@
     <ClCompile Include="Leetcode\0152_Maximum_Product_Subarray.cpp" />
     <ClCompile Include="Leetcode\0153_Find_Minimum_in_Rotated_Sorted_Array.cpp" />
     <ClCompile Include="Leetcode\0154_Find_Min_in_Rotated_Sorted_Array_II.cpp" />
+    <ClCompile Include="Leetcode\0155_Min_Stack.cpp" />
     <ClCompile Include="Leetcode\0164_Maximum_Gap.cpp" />
+    <ClCompile Include="Leetcode\0166_Fraction_to_Recurring_Decimal.cpp" />
     <ClCompile Include="Leetcode\0174_Dungeon_Game.cpp" />
     <ClCompile Include="Leetcode\0188_Best_Time_Buy_Sell_Stock_IV.cpp" />
     <ClCompile Include="Leetcode\0214_Shortest_Palindrome.cpp" />
