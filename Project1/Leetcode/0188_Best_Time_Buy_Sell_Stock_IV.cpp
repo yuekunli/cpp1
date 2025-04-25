@@ -11,12 +11,46 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 	* If k is '2', I can do "buy sell buy sell". A buy action and a sell action together are called 1 transaction
 	*/
 
-	class Solution
-	{
-		/*
-		* Time limit exceeded
-		*/
 
+
+	// The common reason that Solution1 ~ Solution7 are all slow is because within 1 recurrsion frame,
+	// there is looping. i.e. there is either "for" loop or "while" loop within the "solve" function.
+	// Or, for example, Solution6, one scenario doesn't set any value in records array, 
+	// so that scenario is repeatedly solved.
+	// 
+	// The reason I had to either use loop or had trouble setting values in records array is becasue in this scenario:
+	//     there is an outstanding share, it was bought at price 'x', and I'm standing on a high price point, 
+	//     with 'k' transactions allowed, what is the best I can do? 
+	// 
+	// At first glance the best solution for this subproblem depends on the buying price of that outstanding share. 
+	// So if the best result turns out to be selling that share and gather the best profit from the rest of
+	// the prices array, then the formula is:
+	// 
+	//      current_price - x + result from the rest. 
+	// 
+	// I can't set this value in the records array because 'x' here is a varying value. 
+	// Next time I'm in the same scenario, 'x' can be different, if I just read from the record array, 
+	// wouldn't that produce a wrong answer? Yes it would.
+	// 
+	// The key is that the best action I can take when in that scenario doesn't depend on the buying price
+	// of that outstanding share. Transform that formula a little:
+	//      (current_price + result_from_the_rest) - x
+	//      \____________________________________/
+	//        what action I take decides the value of this part
+	// 
+	// No matter what 'x' is, whem I'm in such situation, I should always take the best action and the
+	// result within those parantheses is the same. What I really should set in the records array is the value
+	// of the part inside parantheses.
+	// 
+
+	// By studying the optimal solution provided by leetcode, it looks that converting the original prices array
+	// to a lows-highs array doesn't save that much time (maybe even causes some slow down).
+	// And it also doesn't quite matter how the lows-highs array is built, whether to create a new array or modify the input
+	// prices array in-place doesn't seem to matter that much.
+
+	// time limit exceeded
+	class Solution1
+	{
 		size_t n;
 		int solve(vector<int>& prices, size_t index, int k, vector<vector<int>>& r, int previousBuyPrice)
 		{
@@ -62,13 +96,9 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 		}
 	};
 
-
+	// still too slow
 	class Solution2
 	{
-		/*
-		* Still too slow
-		*/
-
 		size_t n;
 		int solve(vector<int>& prices, vector<vector<vector<int>>>& recordWithStockBought, vector<vector<int>>&recordNoStock, size_t index, size_t previousBuyIndex, int k)
 		{
@@ -141,7 +171,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 			{
 				for (size_t i = index; i < n; i++)
 				{
-					if ((i < n - 1 && prices[i] > prices[i + 1] && prices[i] > prices[previousBuyIndex]) || (i == n - 1 && prices[i] > prices[previousBuyIndex]))
+					if ((i < n - 1 && prices[previousBuyIndex] < prices[i] && prices[i] >  prices[i + 1]) || (i == n - 1 && prices[previousBuyIndex] < prices[i]))
 						              // only sell if i's price is higher than (i+1)'s price, otherwise, hold on and sell later
 						              // actually if i's price is lower than (i-1)'s price, I shouldn't trying selling at i either, should've sold earlier.
 					{
@@ -247,18 +277,26 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 
 			vector<int>lowsHighs;
 			bool isUp;
+			int i;
 			if (prices[0] > prices[1])
+			{
 				isUp = false;
+				i = 1;
+			}
 			else if (prices[0] < prices[1])
 			{
 				lowsHighs.push_back(prices[0]);
 				isUp = true;
+				i = 1;
 			}
 			else
 			{
-				size_t i = 1;
-				while (i < n && prices[i] == prices[0])
+				i = 1;
+				while (i < n && prices[0] == prices[i])
+				{
 					i++;
+				}
+
 				if (i < n)
 				{
 					if (prices[i - 1] < prices[i])
@@ -269,15 +307,14 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 					else
 						isUp = false;
 				}
+				else
+				{
+					// the entire array is flat
+					return 0;
+				}
 			}
 
-			size_t i;
-			for (i = 2; i < n; i++)
-			// if there are some equal values at the beginning of the array,
-			// I should've checked them when I looked for the first low/high point,
-			// but it's OK to start from i=2 here, if I already set "isUp" to true,
-			// I won't do anything until I reach the first high point. Likewise if
-			// I have set "isUp" to false.
+			for (; i < n; i++)
 			{
 				if (isUp)
 				{
@@ -321,7 +358,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 			if (index == n2) return 0;
 			if (k == 0) return 0;
 
-			if (!bought && r[index][k][0] != -1)
+			if ((!bought) && r[index][k][0] != -1)
 				return r[index][k][0];
 			if (bought && r[index][k][1] != -1)
 				return r[index][k][1];
@@ -366,16 +403,20 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 
 			vector<int>lowsHighs;
 			bool isUp;
+			int i;
 			if (prices[0] > prices[1])
+			{
 				isUp = false;
+				i = 1;
+			}
 			else if (prices[0] < prices[1])
 			{
 				lowsHighs.push_back(prices[0]);
 				isUp = true;
+				i = 1;
 			}
 			else
 			{
-				int i = 1;
 				while (i < n && prices[i] == prices[0])
 					i++;
 				if (i < n)
@@ -388,10 +429,14 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 					else
 						isUp = false;
 				}
+				else
+				{
+					// entire prices array is flat.
+					return 0;
+				}
 			}
 
-			int i;
-			for (i = 2; i < n; i++)
+			for (; i < n; i++)
 			{
 				if (isUp)
 				{
@@ -421,8 +466,347 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 	};
 
 
+	class Solution6
+	{
+		size_t lowHighCounts;
+		int originalK;
 
-	class Solution6 // this is accepted by leetcode
+		int solve(vector<int>& lowsHighs, vector<vector<int>>& r, size_t index, int k, int previousBuyPrice)
+		{
+			if (index == lowHighCounts)
+				return 0;
+
+			if (k == 0)
+				return 0;
+
+			if (previousBuyPrice == -1) // didn't buy before
+			{
+				if (index % 2 == 0) // this is a low point
+				{
+					if (r[index][k] != -1) // has record
+					{
+						return r[index][k];
+					}
+					else // no record
+					{
+						int remainingPairs = (lowHighCounts - index) / 2;
+						if (remainingPairs == k)
+						{
+							// number of remaining low-high pairs is less than or equal to the number of transactions allowed
+							// take all the possible profit
+							// which means, I must buy here and sell at the very next high price
+							int profit = lowsHighs[index+1] - lowsHighs[index];
+							if (index != lowHighCounts - 2) // this is not the last low-high pair
+							{
+								profit += solve(lowsHighs, r, index + 2 /*go direct to next low price*/, k - 1, -1);
+							}
+							r[index][k] = profit;
+							return profit;
+						}
+						else // for example, there are 200 pairs left, but I can only make 50 transactions amoung them.
+						{
+							int profitBuyHere = 0;
+							int profitNotBuyHere = 0;
+
+							profitBuyHere = solve(lowsHighs, r, index + 1, k, lowsHighs[index]);
+							
+							if (index != lowHighCounts - 2)
+							{
+								profitNotBuyHere = solve(lowsHighs, r, index + 2, k, -1);
+							}
+
+							int maxProfit = max(profitBuyHere, profitNotBuyHere);
+							r[index][k] = maxProfit;
+							return maxProfit;
+						}
+					}
+				}
+				else // this is a high point, of cource don't buy at this price
+				{
+					// it should not happen that this is the very last high price point, and there is still transactions allowed.
+					// I'm basically wasting transaction
+					if (index != lowHighCounts-1) // but to be safe, do this boundry check
+					{
+						return solve(lowsHighs, r, index + 1, k, -1);
+					}
+					else
+					{
+						return 0;
+					}
+				}
+			}
+			else // I bought before
+			{
+				if (index % 2 == 0) // this is a low price, of course don't sell
+				{
+					return solve(lowsHighs, r, index + 1, k, previousBuyPrice);
+				}
+				else // this is high price, I have two options (1) sell here (2) sell at some later high price
+				{
+					int immediateProfitSellHere = 0;
+					int profitNotSellHere = 0;
+
+					int profitAfterSellHere = 0;
+
+					if (previousBuyPrice < lowsHighs[index])
+					{
+						immediateProfitSellHere = lowsHighs[index] - previousBuyPrice;
+					}
+
+					if (index != lowHighCounts - 1)
+					{
+						profitNotSellHere = solve(lowsHighs, r, index + 2, k, previousBuyPrice);
+					}
+					
+					if (index != lowHighCounts - 1)
+					{
+						profitAfterSellHere = solve(lowsHighs, r, index + 1, k-1, -1);
+					}
+					
+					// !!!! Attention, there seems no loop in "solve", but this solution is still slow
+					// !!!!===========================================================================================
+					// the bottleneck of this solution is that this is not setting any value in records 2-D array here.
+					// !!!!===========================================================================================
+
+					return max(immediateProfitSellHere+profitAfterSellHere, profitNotSellHere);
+				}
+			}
+		}
+
+	public:
+		int maxProfit(int k, vector<int>& prices)
+		{
+			originalK = k;
+			size_t n = prices.size();
+			if (n < 2) return 0;
+
+			vector<int>lowsHighs;
+			bool isUp;
+			int i;
+			if (prices[0] > prices[1])
+			{
+				isUp = false;
+				i = 1;
+			}
+			else if (prices[0] < prices[1])
+			{
+				lowsHighs.push_back(prices[0]);
+				isUp = true;
+				i = 1;
+			}
+			else
+			{
+				i = 1;
+				while (i < n && prices[i] == prices[0])
+					i++;
+				if (i < n)
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						lowsHighs.push_back(prices[i - 1]);
+						isUp = true;
+					}
+					else
+						isUp = false;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			for (; i < n; i++)
+			{
+				if (isUp)
+				{
+					if (prices[i - 1] > prices[i])
+					{
+						lowsHighs.push_back(prices[i - 1]);
+						isUp = false;
+					}
+				}
+				else
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						lowsHighs.push_back(prices[i - 1]);
+						isUp = true;
+					}
+				}
+			}
+			if (isUp)
+				lowsHighs.push_back(prices[i - 1]);
+
+			lowHighCounts = lowsHighs.size();
+
+			vector<vector<int>>r(lowHighCounts, vector<int>(k + 1, -1));
+			return solve(lowsHighs, r, 0, k, -1);
+		}
+	};
+
+
+
+
+	class Solution7
+	{
+		size_t lowHighCounts;
+		int originalK;
+
+		int solve(vector<int>& lowsHighs, vector<vector<int>>& r, size_t index, int k, int previousBuyPrice)
+		{
+			if (index == lowHighCounts)
+				return 0;
+
+			if (k == 0)
+				return 0;
+
+			int indexInRecord = index / 2;
+
+
+			if (r[indexInRecord][k] != -1) // has record
+			{
+				return r[indexInRecord][k];
+			}
+			else // no record
+			{
+				int remainingPairs = (lowHighCounts - index) / 2;
+				if (k > remainingPairs)
+				{
+					k = remainingPairs;
+				}
+				if (remainingPairs == k)
+				{
+					// number of remaining low-high pairs is less than or equal to the number of transactions allowed
+					// take all the possible profit
+					// which means, I must buy here and sell at the very next high price
+					int profit = lowsHighs[index + 1] - lowsHighs[index];
+					if (index != lowHighCounts - 2) // this is not the last low-high pair
+					{
+						profit += solve(lowsHighs, r, index + 2 /*go direct to next low price*/, k - 1, -1);
+					}
+					r[indexInRecord][k] = profit;
+					return profit;
+				}
+				else // for example, there are 200 pairs left, but I can only make 50 transactions amoung them.
+				{
+					int maxProfitBuyHere = 0;
+
+					int i = index + 1;
+					int viableImmediateProfit = 0;
+					while ( i < lowHighCounts  &&   ((lowHighCounts - i - 1) / 2 >=  k - 1)  )
+					{
+						int p = lowsHighs[i] - lowsHighs[index];
+						if (p > viableImmediateProfit)
+						{
+							viableImmediateProfit = p;
+							int profit = p + solve(lowsHighs, r, i + 1, k - 1, -1);
+							maxProfitBuyHere = max(maxProfitBuyHere, profit);
+						}
+						i += 2;
+					}
+
+					int maxProfitNotBuyHere = 0;
+					if (index != lowHighCounts - 2)
+					{
+						maxProfitNotBuyHere = solve(lowsHighs, r, index + 2, k, -1);
+					}
+
+					r[indexInRecord][k] = max(maxProfitBuyHere, maxProfitNotBuyHere);
+
+					return r[indexInRecord][k];
+				}
+			}			
+		}
+
+	public:
+		int maxProfit(int k, vector<int>& prices)
+		{
+			originalK = k;
+			size_t n = prices.size();
+			if (n < 2) return 0;
+			int j = 0;
+			
+			bool isUp;
+			int i;
+			if (prices[0] > prices[1])
+			{
+				isUp = false;
+				i = 1;
+			}
+			else if (prices[0] < prices[1])
+			{
+				++j;
+				isUp = true;
+				i = 1;
+			}
+			else
+			{
+				i = 1;
+				while (i < n && prices[i] == prices[0])
+					i++;
+				if (i < n)
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = true;
+					}
+					else
+						isUp = false;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			for (; i < n; i++)
+			{
+				if (isUp)
+				{
+					if (prices[i - 1] > prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = false;
+					}
+				}
+				else
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = true;
+					}
+				}
+			}
+			if (isUp)
+			{
+				prices[j] = prices[i - 1];
+				++j;
+			}
+
+			lowHighCounts = j;
+			if (lowHighCounts / 2 < k)
+			{
+				k = lowHighCounts / 2;
+			}
+			vector<vector<int>>r(lowHighCounts/2, vector<int>(k + 1, -1));
+			return solve(prices, r, 0, k, -1);
+		}
+	};
+
+
+
+
+
+
+
+
+	// accepted but not ideal 
+	class Solution8
 	{
 		size_t n2;
 		int originalK;
@@ -537,7 +921,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 
 
 
-	class Solution7  // cleaner way to build the lowsHighs array
+	class Solution9  // cleaner way to build the lowsHighs array
 	{
 		size_t lowHighCounts;
 		int totalTransactionsAllowed;
@@ -561,9 +945,9 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 					if (lowHighCounts / 2 < totalTransactionsAllowed || (lowHighCounts - index) / 2 <= k)
 					{
 						// I have more transaction quota than the trades left. So just buy at every low and sell at every high, maximize the profit for this subarray.
-						for (size_t i = index+1; i < lowHighCounts; i=i+2)
+						for (size_t i = index + 1; i < lowHighCounts; i = i + 2)
 						{
-							maxProfit += (lowsHighs[i] - lowsHighs[i-1]);
+							maxProfit += (lowsHighs[i] - lowsHighs[i - 1]);
 						}
 					}
 					else
@@ -586,7 +970,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 					profit = solve(lowsHighs, r, index + 1, k, false);
 					maxProfit = max(maxProfit, profit);
 				}
-				
+
 				r[index][k][0] = maxProfit;
 				return maxProfit;
 			}
@@ -608,7 +992,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 					profit = solve(lowsHighs, r, index + 1, k, true);
 					maxProfit = max(maxProfit, profit);
 				}
-				
+
 				r[index][k][1] = maxProfit;
 				return maxProfit;
 			}
@@ -624,7 +1008,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 
 			lowsHighs.push_back(prices[0]);
 			isUp = false; // I assume I start with a down trend, this way I won't record prices[0] if the prices array really starts with a down trend, which is what I want.
-							// basically, if I assume I start with a down trend, I want to catch the first low point, if I assume I start with an up trend, I want to catch the first high point.
+			// basically, if I assume I start with a down trend, I want to catch the first low point, if I assume I start with an up trend, I want to catch the first high point.
 			size_t n = prices.size();
 			for (size_t i = 1; i < n; i++)
 			{
@@ -640,7 +1024,7 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 				}
 				else
 				{
-					if (prices[i-1] >= prices[i])
+					if (prices[i - 1] >= prices[i])
 						*lowsHighs.rbegin() = prices[i];
 					else
 					{
@@ -661,6 +1045,167 @@ namespace _0188_Best_Time_Buy_Sell_Stock_IV {
 			return solve(lowsHighs, r, 0, k, false);
 		}
 	};
+
+
+
+
+
+	// accepted 3ms beats 82%, memory 16MB beats 67%
+	class Solution10
+	{
+		size_t lowHighCounts;
+
+		int solve(vector<int>& lowsHighs, vector<vector<int>>& r, int index, int k, int previousBuyPrice)
+		{
+			if (index == lowHighCounts)
+			{
+				return 0;
+			}
+			if (k == 0)
+			{
+				return 0;
+			}
+			if (index % 2 == 0)
+			{
+				// this is a low price point.
+				// It's guaranteed that I don't have an outstanding share.
+				// If I buy at some previous low price point, the recurssion makes sure the next frame lands on a high price point,
+				// if that high price point decides not to sell, it moves forward by two elements in the lowsHighs array, which
+				// makes sure the next frame still lands on high price point.
+
+				if (r[index][k] != -1)
+				{
+					return r[index][k];
+				}
+				else
+				{
+					if ((lowHighCounts - index) / 2 == k)
+					{
+						r[index][k] = lowsHighs[index + 1] - lowsHighs[index] + solve(lowsHighs, r, index + 2, k - 1, -1);
+						return r[index][k];
+					}
+					else
+					{
+						int profitBuyHere = 0;
+						int profitNotBuyHere = 0;
+
+						profitBuyHere = solve(lowsHighs, r, index + 1, k, lowsHighs[index]) - lowsHighs[index];
+
+						profitNotBuyHere = solve(lowsHighs, r, index + 2, k, -1);
+
+						r[index][k] = max(profitBuyHere, profitNotBuyHere);
+						return r[index][k];
+					}
+				}
+			}
+			else
+			{
+				// high price point
+				// it's guaranteed that there is an outstanding share.
+				// if I bought at some previously low price point, the recurssion moves forward by 1 element in the lowsHighs array
+				// so the next frame of the recurrsion lands on a high price point, if I don't buy here, I move forward by 2
+				// elements, which again guarantees the next frame lands on a high price point.
+
+				if (r[index][k] != -1)
+				{
+					return r[index][k];
+				}
+				else
+				{
+					int positiveAccumulationIfSellHere = 0;
+					int positiveAccumulationIfNotSellHere = 0;
+					positiveAccumulationIfSellHere = lowsHighs[index] + solve(lowsHighs, r, index + 1, k - 1, -1);
+					if (index != lowHighCounts - 1)
+					{
+						positiveAccumulationIfNotSellHere = solve(lowsHighs, r, index + 2, k, previousBuyPrice);
+					}
+					r[index][k] = max(positiveAccumulationIfSellHere, positiveAccumulationIfNotSellHere);
+					return r[index][k];
+				}
+			}
+		}
+
+	public:
+		int maxProfit(int k, vector<int>& prices)
+		{
+			size_t n = prices.size();
+			if (n < 2) return 0;
+			int j = 0;
+
+			bool isUp;
+			int i;
+			if (prices[0] > prices[1])
+			{
+				isUp = false;
+				i = 1;
+			}
+			else if (prices[0] < prices[1])
+			{
+				++j;
+				isUp = true;
+				i = 1;
+			}
+			else
+			{
+				i = 1;
+				while (i < n && prices[i] == prices[0])
+					i++;
+				if (i < n)
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = true;
+					}
+					else
+						isUp = false;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			for (; i < n; i++)
+			{
+				if (isUp)
+				{
+					if (prices[i - 1] > prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = false;
+					}
+				}
+				else
+				{
+					if (prices[i - 1] < prices[i])
+					{
+						prices[j] = prices[i - 1];
+						++j;
+						isUp = true;
+					}
+				}
+			}
+			if (isUp)
+			{
+				prices[j] = prices[i - 1];
+				++j;
+			}
+
+			lowHighCounts = j;
+			if (lowHighCounts / 2 < k)
+			{
+				k = lowHighCounts / 2;
+			}
+			vector<vector<int>>r(lowHighCounts, vector<int>(k + 1, -1));
+			return solve(prices, r, 0, k, -1);
+		}
+	};
+
+
+
 
 
 	void Test_0188_Best_Time_Buy_Sell_Stock_IV()

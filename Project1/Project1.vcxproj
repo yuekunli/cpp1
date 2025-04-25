@@ -30,6 +30,8 @@
     <ClCompile Include="Leetcode\0089_Gray_Code.cpp" />
     <ClCompile Include="Leetcode\0115_Distinct_Subsequences.cpp" />
     <ClCompile Include="Leetcode\0117_Populating_Next_Right_Pointers_in_Each_Node_II.cpp" />
+    <ClCompile Include="Leetcode\0121_Best_Time_to_Buy_and_Sell_Stock.cpp" />
+    <ClCompile Include="Leetcode\0122_Best_Time_to_Buy_and_Sell_Stock_II.cpp" />
     <ClCompile Include="Leetcode\0123_Best_Time_to_Buy_Sell_Stock_III.cpp" />
     <ClCompile Include="Leetcode\0124_Binary_Tree_Maximum_Path_Sum.cpp" />
     <ClCompile Include="Leetcode\0126_Word_Ladder_II.cpp" />
@@ -51,6 +53,7 @@
     <ClCompile Include="Leetcode\0155_Min_Stack.cpp" />
     <ClCompile Include="Leetcode\0164_Maximum_Gap.cpp" />
     <ClCompile Include="Leetcode\0166_Fraction_to_Recurring_Decimal.cpp" />
+    <ClCompile Include="Leetcode\0172_Factorial_Trailing_Zeros.cpp" />
     <ClCompile Include="Leetcode\0174_Dungeon_Game.cpp" />
     <ClCompile Include="Leetcode\0188_Best_Time_Buy_Sell_Stock_IV.cpp" />
     <ClCompile Include="Leetcode\0214_Shortest_Palindrome.cpp" />

@@ -524,5 +524,14 @@
     <ClCompile Include="Leetcode\0166_Fraction_to_Recurring_Decimal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Leetcode\0172_Factorial_Trailing_Zeros.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\0121_Best_Time_to_Buy_and_Sell_Stock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\0122_Best_Time_to_Buy_and_Sell_Stock_II.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

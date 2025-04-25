@@ -10,58 +10,26 @@ namespace Stock_Trade_Max_Profit {
 	
 	using namespace std;
 
-    class Solution1
+
+    // This is an interview question.
+    // This is on top of the most classic stock trade profit problem
+    // See 121 Best Time to Buy and Sell Stock
+
+    /*
+    * Problem description:
+    * 
+    * Assuming the list of each day's prices is very long. I need to employ multiple computers
+    * to do this job. Each computer is given a subarray of the prices list, what information
+    * should each computer return? How to calculate the overall best profit given each computer's
+    * output?
+    */
+
+    class Solution
     {
         /*
-        * Given an array of numbers representing the price of a stock on each day
-        * Assuming the price doesn't fluctuate within each day.
-        * Pick a day to buy and a day after it to sell, goal is to achieve maximum profit.
-        */
-
-        /*
-        * for example the input is this:
-        * a  b  c  d  e  f  g  h  i  j  k  m  n  p  q  r  s  t
-        *                |                 |
-        *               buy               sell
-        * If the answer is to buy at 'f' and sell at 'm', then 'f' must be the smallest
-        * number in range [a, m], and 'm' must be the biggest in range [f, t].
-        * If 'c' is smaller than 'f', why don't I buy at 'c'. If 'q' is bigger than 'm',
-        * why don't I sell at 'q'.
-        * 
-        * Examine the numbers one by one, keep track of the smallest among all numbers
-        * that have been examined. When I find the selling point, this smallest number
-        * must be the buying point. Calculate the profit if I sell at each point, assuming
-        * buying at the smallest number, keep track of what the max profit is.
-        */
-
-    public:
-        int maxProfit(vector<int>& prices)
-        {
-            size_t n = prices.size();
-            size_t i = 0;
-            int minPriceSoFar = prices[0];
-            int maxProfit = 0;
-            for (i = 1; i < n; i++)
-            {
-                int profit = prices[i] - minPriceSoFar;
-                maxProfit = max(maxProfit, profit);
-                minPriceSoFar = min(minPriceSoFar, prices[i]);
-            }
-            return maxProfit;
-        }
-    };
-
-
-    class Solution2
-    {
-        /*
-        * Assuming the list of each day's prices is very long. I need to employ multiple computers
-        * to do this job. Each computer calcuate a subarray of the prices list, what information
-        * should each computer return? How to calculate the overall best profit given each computer's
-        * output?
-        * The overall best buying and selling points can co-exist in the same segment, so each computer
+        * The overall best buying and selling prices can co-exist in the same segment, so each computer
         * should definitely compute the max profit within that subarray.
-        * If the best buying and selling points are in two different subarrays, I just need to know
+        * If the best buying and selling prices are in two different subarrays, I just need to know
         * the minimum and maximum price of each subarray, when I examine the output of each computer,
         * I just keep track of current minimum price among all subarrays that have been examined so far,
         * and always try the profit obtained by using current minimum price and the maximum price in the
@@ -118,7 +86,7 @@ namespace Stock_Trade_Max_Profit {
                 size_t start = i == 0 ? 0 : previous_end + 1;
                 size_t end = start + segmentLength - 1;
                 previous_end = end;
-                workers[i] = thread(&Solution2::computeSegment, this, std::ref(prices), start, end, i, std::ref(segmentResults));
+                workers[i] = thread(&Solution::computeSegment, this, std::ref(prices), start, end, i, std::ref(segmentResults));
             }
             computeSegment(prices, previous_end + 1, n - 1, threadsCount - 1, segmentResults);
 
@@ -142,11 +110,9 @@ namespace Stock_Trade_Max_Profit {
             int maxProfit = 0;
             for (size_t i = 0; i < n; i++)
             {
-                int buy = prices[i];
                 for (size_t j = i + 1; j < n; j++)
                 {
-                    int profit = prices[j] - buy;
-                    maxProfit = max(profit, maxProfit);
+                    maxProfit = max(prices[j] - prices[i], maxProfit);
                 }
             }
             return maxProfit;
@@ -159,8 +125,7 @@ namespace Stock_Trade_Max_Profit {
         mt19937 gen;
         uniform_int_distribution<> intDist;
 
-        Solution1 s1;
-        Solution2 s2;
+        Solution s2;
         BruteForce bf;
     public:
         Test() :gen(rd()), intDist(1, 30) {}
@@ -222,8 +187,8 @@ namespace Stock_Trade_Max_Profit {
     void Test_Stock_Trade_Max_Profit()
     {
         Test t;
-        Solution1 s1;
-        //Solution2 s2;
+
+        Solution s2;
         BruteForce bf;
 
         while (true)
