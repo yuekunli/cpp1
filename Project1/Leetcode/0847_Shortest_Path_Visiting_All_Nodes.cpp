@@ -507,6 +507,28 @@ namespace _0847_Shortest_Path_Visiting_All_Nodes {
 	};
 
 
+	/*
+	* Heuristic:
+	* record the step counter when arriving at a node.
+	* for example if there are 4 nodes: a,b,c,d
+	* if the step counter for each node is: 3 1 4 2
+	* This means the tour path is b->d->a->c
+	* When standing on a node, try the non-visited node.
+	* If all neighbors are visited, go to the one with the lowest step counter.
+	* If all neighbors are visited, I'm kind of in a loop, going to the node with the lowest step counter
+	* can lead me to a shorter path to escape the loop.
+	*/
+	class Solution6
+	{
+	public:
+		int shortestPathLength(vector<vector<int>>& graph)
+		{
+			return 0;
+		}
+	};
+
+
+
 	void Test_0847_Shortest_Path_Visiting_All_Nodes()
 	{
 		int test;

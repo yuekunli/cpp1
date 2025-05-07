@@ -103,7 +103,7 @@ int main()
 
     //_0164_Maximum_Gap::Test_0164_Maximum_Gap();
 
-    _0166_Fraction_to_Recurring_Decimal::Test_0166_Franction_to_Recurring_Decimal();
+    //_0166_Fraction_to_Recurring_Decimal::Test_0166_Franction_to_Recurring_Decimal();
 
     //_0174_Dungeon_Game::Test_0174_Dungeon_Game();
 
@@ -175,7 +175,7 @@ int main()
 
     //_0847_Shortest_Path_Visiting_All_Nodes::Test_0847_Shortest_Path_Visiting_All_Nodes();
 
-    //_0887_Super_Egg_Drop::Test_0887_Super_Egg_Drop();
+    _0887_Super_Egg_Drop::Test_0887_Super_Egg_Drop();
 
     //_0891_Sum_of_Subsequence_Widths::Test_0891_Sum_of_Subsequence_Widths();
     

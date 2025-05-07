@@ -114,7 +114,7 @@ namespace _0818_Race_Car {
 			if (speed <= d)
 			{
 				/*
-				* What is the theoretical proof that when the next acceleration don't go beyond the target,
+				* What is the theoretical proof that when the next acceleration doesn't go beyond the target,
 				* the optimal solution is always just accelerate and get closer to the target?
 				* Why not make a few reverse steps right now so that I don't have to reverse in the future?
 				*/
@@ -138,7 +138,6 @@ namespace _0818_Race_Car {
 					lastPosition = position - speed / 2;
 					while (true)
 					{
-						
 						if (position - reverseDist <= lastPosition)
 							break;
 						result2 = 2 + i + solve(position - reverseDist, 1, r);
@@ -190,10 +189,83 @@ namespace _0818_Race_Car {
 	};
 
 
+	/*
+	* This feels like the coin-change problem, given a coin system (denominations of coins)
+	* use least amount of coins to make up a change.
+	* speed can only be 1, 2, 4, 8, ... 2^n, the distance each time I travel, if I accelerate
+	* is one of those speed values.
+	* It feels like using those numbers (1, 2, 4, 8, ... 2^n) to make up a change (the target position)
+	* The coin-change problem is a greedy algorithm, why don't I try greedy on this problem too?
+	* So what exactly is the greedy strategy here?
+	* (1). if I accelerate and I won't go beyond the target, then accelerate
+	* (2). Acceleration will go beyond the target
+	*     (2.1) go over target and reverse, I end up speed = 1, toward target
+	*     (2.2) do two reverses at current position, I end up speed = 1, toward target
+	* Both 2.1 and 2.2 yields the same situation in terms of speed value and speed direction
+	* Choose the one that get me closer to target.
+	* In another word, if acceleration drives the car beyond target by "a lot", then do two reverses
+	* at current position. If acceleration only drives the car over target by "a little", then do 2.1
+	*/
+	//------------------------------------------------------------------------------------------------
+	/*
+	* It turns out the problem can't be solved with greedy strategy.
+	* target: 5
+	* correct solution: 7: AARARAA
+	* After step#3, (the first R), a "local optimal" is to reverse again, if the criteria for optimality
+	* is to get closer to target. After the first 'R', I should definitely not accelerate becasue that
+	* drives the car farther away from the target, another 'R' is the local optimal step. But if I use AARR
+	* as the first 4 steps, that eventually leads to 8 steps which is not optimal.
+	* 
+	* The difference between this and the coin-change problem is that in coin-change problem, I can freely use
+	* any coin at each step (as long as the sum doesn't go over), but in this problem, when I make a certain
+	* choice at a certain step, the consequence is the speed change caused by such action.
+	* In this problem, these are the basic elements: 1, 2, 4, 8, 16, ... 2^n. If at some point, I use the element "16",
+	* I can't immediately use the element "4" at the next step, because after using "16", speed has increaed to a certain value.
+	* But in coin-change problem, after using a 25-cent coin, I can immediately use a penny.
+	*/
+	class Solution3
+	{
+	public:
+		int racecar(int target)
+		{
+			int stepCount = 0;
+			int speed = 1;
+			int distance = target;
+			while (distance != 0)
+			{
+				if (speed <= distance)
+				{
+					++stepCount;
+					distance -= speed;
+					speed *= 2;
+				}
+				else
+				{
+					int distance_if_go_over = speed - distance;
+					if (distance < distance_if_go_over)
+					{
+						// do two reverses at current position
+						stepCount += 2;
+						speed = 1;
+					}
+					else
+					{
+						// accelerate and then reverse
+						stepCount += 2;
+						speed = 1;
+						distance = distance_if_go_over;
+					}
+				}
+			}
+			return stepCount;
+		}
+	};
+
+
 	void Test_0818_Race_Car()
 	{
 		Solution s;
-		Solution2 s2;
+		//Solution2 s2;
 		int target;
 		while (true)
 		{
@@ -201,7 +273,7 @@ namespace _0818_Race_Car {
 			cin >> target;
 			if (target == 0) break;
 			cout << s.racecar(target) << "\n";
-			cout << s2.racecar(target) << "\n\n";
+			//cout << s2.racecar(target) << "\n\n";
 		}
 	}
 }

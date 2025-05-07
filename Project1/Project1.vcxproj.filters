@@ -62,9 +62,6 @@
     <ClCompile Include="Problems\Search_Missing_In_Consecutive_Sorted_Array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Problems\Stock_Trade_Max_Profit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Leetcode\0004_Median_of_Two_Sorted_Arrays.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

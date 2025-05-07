@@ -96,11 +96,271 @@ namespace _0887_Super_Egg_Drop {
 		}
 	};
 
+	class Solution3
+	{
+	public:
+		int superEggDrop(int k, int n)
+		{
+			vector<vector<int>>r(k + 1, vector<int>(n + 1, 0));
+			iota(r[1].begin(), r[1].end(), 0);
+			for (int i = 0; i <= k; ++i)
+			{
+				r[i][1] = 1;
+			}
+			for (int eg = 2; eg <= k; ++eg)
+			{
+				for (int fl = 2; fl <= n; ++fl)
+				{
+					int minimum = fl;
+					int movesNeededIfFirstTryBreak;
+					int movesNeededIfFirstTrySurvive;
+
+					if (fl % 2 == 0)
+					{
+						// for example 8 floors, try 4 and 5
+						// say I have 6 eggs
+						// when trying floor #3
+						//     --  break:    2 floors with 5 eggs
+						//     --  survive:  5 floors with 6 eggs 
+						// 
+						// when trying floor #4
+						//     --  break:    3 floors with 5 eggs
+						//     --  survive:  4 floors with 6 eggs
+						// when trying floor #5
+						//     --  break:    4 floors with 5 eggs    * this one is bigger in this case
+						//     --  survive:  3 floors with 6 eggs
+						int firstTry = fl / 2;
+						movesNeededIfFirstTryBreak = r[eg - 1][firstTry - 1] + 1;
+						movesNeededIfFirstTrySurvive = r[eg][fl - firstTry] + 1;
+						minimum = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+
+						for (int i = firstTry - 1; i >= 2; --i)
+						{
+							movesNeededIfFirstTryBreak = r[eg - 1][i - 1] + 1;
+							movesNeededIfFirstTrySurvive = r[eg][fl - i] + 1;
+							int m = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+							if (m < minimum)
+							{
+								minimum = m;
+							}
+							else
+							{
+								// the result of trying at this floor is already not affecting the overall result
+								// keep lowering the first try floor will have less chance to affect the overall result
+								// when keep lowering the first try, the "moves needed if first try break" decreases (5 eggs with fewer and fewer floors)
+								// when keep lowering the first tyr, the "moves needed if first try survive" increases ( 6 eggs with more and more floors)
+								// 
+								if (movesNeededIfFirstTryBreak <= movesNeededIfFirstTrySurvive)
+								{
+									break;
+								}
+							}
+						}
+
+					}
+					else
+					{
+						// for example 9 floors, try 4, 5, 6
+						// say I have 10 eggs
+						// when trying floor #4 
+						//      --  break:    3 floors with 9 eggs    
+						//                                            * no clear winner (bigger) in this case
+						//      --  survive:  5 floors with 10 eggs
+						// when trying floor #5
+						//      --  break:    4 floors with 9 eggs    * this one is bigger in this case
+						//      --  survive   4 floors with 10 eggs
+						// when trying floor #6
+						//      --  break:    5 floors with 9 eggs    * this one is bigger in this case
+						//      --  survive:  3 floors with 10 eggs
+                        // 
+						//
+						// just need to find the minimum among { bigger of case#1, bigger of case #2 (4 floors with 9 eggs), bigger of case #3 (5 floors with 9 eggs) }
+						// obviously "4 floors with 9 eggs" is smaller than "5 floors with 9 eggs"
+						// 
+						// 
+
+						int firstTry = fl / 2 + 1;
+						movesNeededIfFirstTryBreak = r[eg - 1][firstTry - 1] + 1;
+						movesNeededIfFirstTrySurvive = r[eg][fl - firstTry] + 1;
+						minimum = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+
+						for (int i = firstTry - 1; i >= 2; --i)
+						{
+							movesNeededIfFirstTryBreak = r[eg - 1][i - 1] + 1;
+							movesNeededIfFirstTrySurvive = r[eg][fl - i] + 1;
+							int m = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+							if (m < minimum)
+							{
+								minimum = m;
+							}
+							else
+							{
+								// the result of trying at this floor is already not affecting the overall result
+								// keep lowering the first try floor will have less chance to affect the overall result
+								// when keep lowering the first try, the "moves needed if first try break" decreases (5 eggs with fewer and fewer floors)
+								// when keep lowering the first tyr, the "moves needed if first try survive" increases ( 6 eggs with more and more floors)
+								// 
+								if (movesNeededIfFirstTryBreak <= movesNeededIfFirstTrySurvive)
+								{
+									break;
+								}
+							}
+						}
+					}
+					r[eg][fl] = minimum;
+				}
+			}
+			return r[k][n];
+		}
+	};
+
+	// accepted but too slow 1183 ms beats 5%
+	class Solution4
+	{
+		int solve(vector<vector<int>>& r, int egg, int floor)
+		{
+			if (r[egg][floor] != -1)
+			{
+				return r[egg][floor];
+			}
+			int firstTry;
+			if (floor % 2 == 0)
+			{
+				firstTry = floor / 2;
+			}
+			else
+			{
+				firstTry = floor / 2 + 1;
+			}
+			int minimum;
+			int movesNeededIfFirstTryBreak;
+			int movesNeededIfFirstTrySurvive;
+			movesNeededIfFirstTryBreak = solve(r, egg - 1, firstTry - 1) + 1;
+			movesNeededIfFirstTrySurvive = solve(r, egg, floor - firstTry) + 1;
+			minimum = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+
+			for (int i = firstTry - 1; i >= 2; --i)
+			{
+				movesNeededIfFirstTryBreak = solve(r, egg - 1, i - 1) + 1;
+				movesNeededIfFirstTrySurvive = solve(r, egg, floor - i) + 1;
+				int m = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+				if (m < minimum)
+				{
+					minimum = m;
+				}
+				else
+				{
+					if (movesNeededIfFirstTryBreak <= movesNeededIfFirstTrySurvive)
+					{
+						break;
+					}
+				}
+			}
+			r[egg][floor] = minimum;
+			return minimum;
+		}
+
+	public:
+		int superEggDrop(int k, int n)
+		{
+			vector<vector<int>> records(k + 1, vector<int>(n + 1, -1));
+			iota(records[1].begin(), records[1].end(), 0);
+			for (int i = 1; i <= k; ++i)
+			{
+				records[i][0] = 0;
+				records[i][1] = 1;
+			}
+			records[0][0] = 0;
+
+			return solve(records, k, n);
+		}
+	};
+
+	// accepted 17ms beats 79%
+	class Solution5
+	{
+		int solve(vector<vector<int>>& r, int eg, int fl)
+		{
+			if (r[eg][fl] != -1)
+			{
+				return r[eg][fl];
+			}
+			if (fl == 0 && eg != 0)
+			{
+				r[eg][0] = 0;
+				return 0;
+			}
+			if (eg == 1 && fl >= 1)
+			{
+				r[eg][fl] = fl;
+				return fl;
+			}
+			if (fl == 1 && eg >= 1)
+			{
+				r[eg][fl] = 1;
+				return 1;
+			}
+			int movesNeededIfFirstTryBreak;
+			int movesNeededIfFirstTrySurvive;
+			int firstTry;
+			
+			int lo = 1;
+			int hi = fl;
+			int minAbsoluteDiff = fl;
+			int minimumMoves;
+			while (true)
+			{
+				firstTry = lo + (hi - lo) / 2;
+				movesNeededIfFirstTryBreak = solve(r, eg - 1, firstTry - 1) + 1;
+				movesNeededIfFirstTrySurvive = solve(r, eg, fl - firstTry) + 1;
+				if (movesNeededIfFirstTryBreak == movesNeededIfFirstTrySurvive)
+				{
+					r[eg][fl] = movesNeededIfFirstTryBreak;
+					return r[eg][fl];
+				}
+				else
+				{
+					int ab = abs(movesNeededIfFirstTryBreak - movesNeededIfFirstTrySurvive);
+
+					if (ab < minAbsoluteDiff)
+					{
+						minAbsoluteDiff = ab;
+						minimumMoves = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+					}
+					if (movesNeededIfFirstTryBreak > movesNeededIfFirstTrySurvive)
+					{
+						hi = firstTry - 1;	
+					}
+					else
+					{
+						lo = firstTry + 1;
+					}
+					if (hi < lo)
+					{
+						break;
+					}
+				}
+			}
+			r[eg][fl] = minimumMoves;
+			return r[eg][fl];
+		}
+	public:
+		int superEggDrop(int k, int n)
+		{
+			int movesIfEnoughEggs = (int)(floor(log2((float)n))) + 1;
+			if (k >= movesIfEnoughEggs)
+			{
+				return movesIfEnoughEggs;
+			}
+			vector<vector<int>>r(k + 1, vector<int>(n + 1, -1));
+			return solve(r, k, n);
+		}
+	};
 
 	void Test_0887_Super_Egg_Drop()
 	{
 		//Solution s;
-		Solution2 s2;
+		Solution5 s2;
 		int k, n;
 		while (true)
 		{
