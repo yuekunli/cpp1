@@ -175,9 +175,9 @@ int main()
 
     //_0847_Shortest_Path_Visiting_All_Nodes::Test_0847_Shortest_Path_Visiting_All_Nodes();
 
-    _0887_Super_Egg_Drop::Test_0887_Super_Egg_Drop();
+    //_0887_Super_Egg_Drop::Test_0887_Super_Egg_Drop();
 
-    //_0891_Sum_of_Subsequence_Widths::Test_0891_Sum_of_Subsequence_Widths();
+    _0891_Sum_of_Subsequence_Widths::Test_0891_Sum_of_Subsequence_Widths();
     
     //_0903_Valid_Permutation_for_DI_Sequence::Test_0903_Valid_Permutation_for_DI_Sequence();
 

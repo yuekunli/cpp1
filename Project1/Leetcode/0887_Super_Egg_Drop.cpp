@@ -6,21 +6,48 @@ namespace _0887_Super_Egg_Drop {
 
 	using namespace std;
 
+
+	/*
+	*         |  1 floor  | 2 floors   3 floors ....   n floors
+	* --------+-----------+------------------------------------
+	* 1 egg   |           |
+	* --------+-----------+------------------------------------
+	* 2 eggs  |           |
+	* --------+-----------+------------------------------------
+	* ....    |           |
+	* --------+-----------+------------------------------------
+	* k eggs  |           |
+	* 
+	* The gist is to solve this matrix.
+	* 
+	* for a certain row, x eggs with n floors.
+	* The middle is likely to give me two close results.
+	* for example 100 floors with 5 eggs.
+	* try floor #50
+	* if first drop breaks the egg, I need to solve 49 floors with 4 eggs next.
+	* If first drop doesn't break the egg, I need to solve 50 floors with 5 eggs next.
+	* 
+	* In each scenario, I must take the worse case.
+	* If say try floor 'x', if break first egg, I need 30 moves next, 31 in total.
+	* If first egg doesn't break, I need 24 moves next, 25 in total.
+	* I must say I need at least 31 moves to solve this scenario. 31 is *just* enough if first egg breaks.
+	* It's *more than* enough if first egg doesn't break.
+	* But I can't say I only need 25 moves, because if first egg breaks, 25 moves won't be enough.
+	* 
+	*  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+	*                                      |
+	*                                  if I try here as first drop, the unbalanceness of the two scenarios are
+	* very obvious, so the longer part determines the find result of this scenario.
+	* The farther away from the middle, the more moves the "longer" part demands, and that "demaind" is the result for that scenario.
+	* So I don't need to try every floor as the first drop.
+	* If at some point the result is already worse than what I have so far, I don't need to try farther away from the middle, because
+	* those results are just going to be worse.
+	*/
+
+
 	class Solution
 	{
 	public:
-
-		/*
-		*         |  1 floor  | 2 floors   3 floors ....   n floors
-		* --------+-----------+------------------------------------
-		* 1 egg   |           |
-		* --------+-----------+------------------------------------
-		* 2 eggs  |           |
-		* --------+-----------+------------------------------------
-		* ....    |           |
-		* --------+-----------+------------------------------------
-		* k eggs  |           |
-		*/
 		int superEggDrop(int k, int n)
 		{
 			vector<vector<int>> t(k+1, vector<int>(n+1, 1));
@@ -238,6 +265,12 @@ namespace _0887_Super_Egg_Drop {
 			movesNeededIfFirstTryBreak = solve(r, egg - 1, firstTry - 1) + 1;
 			movesNeededIfFirstTrySurvive = solve(r, egg, floor - firstTry) + 1;
 			minimum = max(movesNeededIfFirstTryBreak, movesNeededIfFirstTrySurvive);
+
+			// the scenario above (firstTry = floor / 2 or floor /2 + 1) is the most likely
+			// scenario to get the minimum move with this many eggs.
+			// but try the lower floors for first drop, once on a certain floor, the "moves" needed to solve the problem
+			// is no longer less than current optimal result, stop the search, because the farther away from middle,
+			// the more moves needed to solve the problem.
 
 			for (int i = firstTry - 1; i >= 2; --i)
 			{
