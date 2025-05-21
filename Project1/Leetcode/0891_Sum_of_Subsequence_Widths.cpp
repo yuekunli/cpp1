@@ -88,6 +88,44 @@ namespace _0891_Sum_of_Subsequence_Widths {
 		}
 	};
 
+	/*
+	* after sorting
+	*     #1     #2     #3     #4     #5     #6
+	*         a      b      c      d      e
+	* 
+	* There are 6 elements in the input array #1 ~ #6, after sorting their order is #1 ~ #6
+	* a = #2 - #1
+	* b = #3 - #2
+	* 
+	* A subsequence whose min is #1 and max is #4, there are 4 such subsequences, i.e. the appearence or absence of #2 and #3.
+	* The width of such subsequence is #4 - #1. the count of such subsequence is 4
+	* Likewise, a subsequence whose min is #2 and max is #6, its width is #6 - #2, and its count is 2^3, based on the appearence or absence of #3, #4, #5
+	* sum of widths of 2-element subsequences: a + b + c + d + e
+	* sum of widths of 3-element subsequences: (#3 - #1) * 2 + (#4 - #2) * 2 + (#5 - #3) * 2 + (#6 - #4) * 2 = (a + b) * 2 + (b + c) * 2 + (c + d) * 2 + (d + e) * 2
+	* sum of widths of 4-element subsequences: (a+b+c)*4 + (b+c+d)*4 + (c+d+e)*4
+	* sum of widths of 5-element subsequences: (a+b+c+d)*8 + (b+c+d+e)*8
+	* sum of widths of 6-element subsequences: (a+b+c+d+e)*16
+	* 
+	* sum of all: a +   2a +   4a +   8a + 16a
+	*            +b + 2*2b + 2*4b + 2*8b + 16b
+	*            +c + 2*2c + 3*4c + 2*8c + 16c
+	*            +d + 2*2d + 2*4d + 2*8d + 16d
+	*            +e +   2e +   4e +   8e + 16e
+	* 
+	* extract out the diff (i.e. 'a', 'b', ... 'e') and the 2's power
+	*            1    2    4    8    16
+	*      a     1    1    1    1    1
+	*      b     1    2    2    2    1
+	*      c     1    2    3    2    1
+	*      d     1    2    2    2    1
+	*      e     1    1    1    1    1
+	* 
+	* the difference between the total count of 'b' and the total count of 'a' is 2 + 4 + 8  <== this is a geometric series.
+	* From 'a' row to 'b' row, look at the elements except the first and last, every element increase by 1
+	* From 'b' row to 'c' row, look at the elements except the fisrt 2 and last 2, every element increase by 1
+	* 'b' row is a mirrow of 'd' row.
+	* 'a' row is a mirrow of 'e' row.
+	*/
 
 	// accepted 35ms beats 49%, memory 60MB beats 39%
 	class Solution3
