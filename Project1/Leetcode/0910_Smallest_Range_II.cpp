@@ -338,6 +338,39 @@ namespace _0910_Smallest_Range_II {
 	};
 
 
+	/*
+	*                                  *D
+	*                                *
+	*                             *
+	*                  A    *
+	*                  *    B
+	*              *      |
+	*          *          |
+	*       *             |
+	*    *C               |
+	*    \_______________/ \_____________/
+	*      these all +k      these all -k
+	*
+	* sort the array first, what would be the pattern of the movement of these elements that yield the minimum score?
+	* Can it be seemingly random? If I write out the action on these elements (after sorting), can it be something like:
+	* -k, +k, +k, -k, -k, -k, +k, -k, +k, ...
+	* The answer is no. Such random action sequence doesn't yield the minimum score.
+	* The sequence that yields the minimum score must be something like: -k, -k, -k, ... -k, +k, +k, +k, ...,+k
+	* As if there is a cut in the middle somewhere, all elements on the left are +k (lift up), all elements on the right
+	* are -k (press down). 
+	* Let's say 'A' is the one that eventually becomes the max, and 'A' is lifted up, I don't know where 'A' is. 
+	* All the elements that were originally less than 'A', after they are lifted up, they are still less than 'A',
+	* they won't matter when looking for the max. Can any of those in [C, A) be pressed down? Why would I press them down.
+	* My goal is to compress the overall space, if I press down the elements in [C, A), that's going to make the space bigger.
+	* Likewise, for those elements that are originally big, I want to press them down. Among all the elements that are pressed down
+	* (i.e. in range [B, D]), there may be multiple that are still greater than 'A' even after being pressed down. But I don't
+	* have to care about every single one of them, because I know 'D' is the biggest. If one of the them is the eventual max,
+	* it has to be 'D'. So the only two elements that can compete for the eventual max are A+k and D-k.
+	* Likewise the only two elements that can compete for the min are C+k and B-k.
+	* Try every such gap as the cut, test two possible candidates for max, test the other two possible candidates for min.
+	* Compute the score for each possible cut, find the minimum score.
+	*/
+
 	// accepted 5ms beats 34%
 	class Solution6
 	{

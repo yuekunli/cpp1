@@ -181,9 +181,9 @@ int main()
     
     //_0903_Valid_Permutation_for_DI_Sequence::Test_0903_Valid_Permutation_for_DI_Sequence();
 
-    _0910_Smallest_Range_II::Test_0910_Smallest_Range_II();
+    //_0910_Smallest_Range_II::Test_0910_Smallest_Range_II();
 
-    //_0911_Online_Election::Test_0911_Online_Election();
+    _0911_Online_Election::Test_0911_Online_Election();
 
     //_0913_Cat_and_Mouse::Test_0913_Cat_and_Mouse();
 
