@@ -63,7 +63,6 @@ namespace _0915_Partition_Array_into_Disjoint_Intervals {
 	// But this actually iterate entire array at least once to find the max,
 	// maybe using the built-in STL API max_element is fast, so the cost incurred by max_element
 	// is neglectable comparing to the gain brought by "if (nums[i] == *maxIt)"
-	// 
 	class Solution2
 	{
 		int partitionDisjoint(vector<int>& nums)
@@ -82,6 +81,10 @@ namespace _0915_Partition_Array_into_Disjoint_Intervals {
 				{
 					if (nums[i] == *maxIt)
 					{
+						// the max of the whole input array must be in the right partition
+						// (similarly, the min of the whole array must be in the left. (althought this therom doesn't really matter here))
+						// so if I alreay arrived at the max, the final answer can't go beyond that
+						// so there is no point moving farther right, I should break out.
 						break;
 					}
 					if (maxSinceLeftEnd < nums[i])

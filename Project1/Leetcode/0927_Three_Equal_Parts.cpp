@@ -194,8 +194,8 @@ namespace _0927_Three_Equal_Parts {
 		}
 	};
 
-
-	class Solution2 // accepted
+	// accepted 107ms beat 5%
+	class Solution2
 	{
 	public:
 
@@ -324,6 +324,206 @@ namespace _0927_Three_Equal_Parts {
 		}
 	};
 
+	// accepted 3ms beat 42%
+
+	class Solution3 
+	{
+		const int HI1 = 0;
+		const int LOW1 = 1;
+		const int LOWBIT = 2;
+
+	public:
+		vector<int> threeEqualParts(vector<int>& arr) 
+		{
+			auto len = arr.size();
+			auto ones = count(arr.cbegin(), arr.cend(), 1);
+			if (ones == 0)
+			{
+				return { 0, 2 };
+			}
+			if (ones % 3 != 0)
+			{
+				return { -1, -1 };
+			}
+
+			auto onesInEach = ones / 3;
+
+			size_t count = 0;
+			int part = 0;
+			vector<vector<size_t>>r(3, vector<size_t>(3, 0));
+			r[2][LOWBIT] = len - 1;
+
+			for (auto i = 0; i < len; ++i)
+			{
+				if (arr[i] == 1)
+				{
+					++count;
+					if (count == 1)
+					{
+						r[part][HI1] = i;
+					}
+					if (count == onesInEach)
+					{
+						r[part][LOW1] = i;
+						count = 0;
+						++part;
+					}
+				}
+			}
+
+			// number of 0 at the end of part 3: 
+			auto temp1 = r[2][LOWBIT] - r[2][LOW1];
+
+			// Is there enough 0 between the end of part 2 and the start of part 3?
+			if (r[2][HI1] - r[1][LOW1] - 1 < temp1)
+			{
+				return { -1, -1 };
+			}
+			
+			// Is there enough 0 between the end of part 1 and the start of part 2?
+			if (r[1][HI1] - r[0][LOW1] - 1 < temp1)
+			{
+				return { -1, -1 };
+			}
+
+			r[0][LOWBIT] = r[0][LOW1] + temp1;
+			r[1][LOWBIT] = r[1][LOW1] + temp1;
+
+			// if the distance between the high '1' and the lowest bit is the same in all 3 parts
+			if (r[0][LOWBIT] - r[0][HI1] != r[1][LOWBIT] - r[1][HI1])
+			{
+				return { -1, -1 };
+			}
+			if (r[2][LOWBIT] - r[2][HI1] != r[1][LOWBIT] - r[1][HI1])
+			{
+				return { -1, -1 };
+			}
+
+			int countOfOnes = 0;
+			int i = r[0][HI1], j = r[1][HI1], k = r[2][HI1];
+			while (countOfOnes < onesInEach)
+			{
+				if (arr[i] != arr[j] || arr[j] != arr[k])
+				{
+					return { -1, -1 };
+				}
+				if (arr[i] == 1)
+				{
+					++countOfOnes;
+				}
+				++i;
+				++j;
+				++k;
+			}
+
+			return { (int)r[0][LOWBIT], (int)r[1][LOWBIT] + 1 };
+		}
+	};
+
+	// accepted 0ms beats 100%
+	// The key of this solution to reach the maximum speed is to absolutely not waste any iteration over the input array
+	// Initially I must iterate the entire array at least once to count the total number of ones.
+	// After that, even though there are a few "for" loops and "while" loops in this code, every one of these loops on
+	// iterate part of the input array. Overall speaking, all these "for" loops and "while" loops only collectively 
+	// iterate the whole array once.
+	class Solution4
+	{
+	public:
+		vector<int> threeEqualParts(vector<int>& arr)
+		{
+			int len = arr.size();
+			int ones = count(arr.cbegin(), arr.cend(), 1);
+			if (ones == 0)
+			{
+				return { 0, 2 };
+			}
+			if (ones % 3 != 0)
+			{
+				return { -1, -1 };
+			}
+
+			int onesInEach = ones / 3;
+
+			int count = 0;
+			int hi1p1  = -1;
+			int i = 0;
+			for (i = 0; i < len; ++i) // find the high 1 bit of part 1, break out after reaching low 1 bit of part 1
+			{
+				if (arr[i] == 1)
+				{
+					++count;
+				}
+				if (count == 1 && hi1p1 == -1)
+				{
+					hi1p1 = i;
+				}
+				if (count == onesInEach)
+				{
+					break;
+				}
+			}
+			++i;
+			count = 0;
+			while (arr[i] == 0) // start after low 1 bit of part 1, find the high 1 bit of part 2
+			{
+				++i;
+			}
+			int hi1p2 = i;
+			int j = hi1p1;
+			while (count < onesInEach) // start from high 1 bit of part 2, compare part 1 and part 2, stop after reaching the low 1 bit of part 2
+			{
+				if (arr[j] != arr[i])
+				{
+					return { -1, -1 };
+				}
+				if (arr[j] == 1)
+				{
+					++count;
+				}
+				++j;
+				++i;
+			}
+			while (arr[i] == 0) // start after low 1 bit of part 2, find the high 1 bit of part 3
+			{
+				++i;
+			}
+			int hi1p3 = i;
+			j = hi1p1;
+			int k = hi1p2;
+			count = 0;
+			while (count < onesInEach) // start from high 1 bit of part 3, stop after reaching low 1 bit of part 3, compare part 1 and part 3
+			{
+				// don't need to write this "if" condition like this:
+				// if (arr[j] != arr[i] || arr[k] != arr[i])
+				// I already compared part 1 and part 2, from high 1 to low 1, part 1 and part 2 match.
+				// I just need to compare part 1 or part 2 with part 3
+				if (arr[j] != arr[i])
+				{
+					return { -1, -1 };
+				}
+				if (arr[j] == 1)
+				{
+					++count;
+				}
+				++i;
+				++j;
+				++k;
+			}
+
+			--i;
+			--j;
+			--k;
+			// at this point, i, j, k, points at low 1 bit of part 3, part 1, part 2, respectively.
+			auto temp = len - 1 - i; // number of zeros between low 1 bit of part 3 and the end of input (i.e. the zeros that matter)
+
+			if (temp > hi1p3 - 1 - k || temp > hi1p2 - 1 - j) // there must be enough zeros after part 1 and part 2.
+			{
+				return { -1, -1 };
+			}
+
+			return { j + temp, k + temp + 1 };
+		}
+	};
 
 	class AutomatedTest
 	{
@@ -479,7 +679,7 @@ public:
 		string arrInString;
 		int test;
 		char p[] = "abc";
-		Solution s;
+		Solution4 s;
 		while (true)
 		{
 			cout << "manual test (1), automated test (2), or no test (0)? ";

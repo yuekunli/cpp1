@@ -73,7 +73,7 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 	* 
 	* t1Buy    t1Sell   t2Buy   t2Sell
 	* 
-	* Overall profit = (t2Sell - t1Buy) + (t1Sell - t1Buy)
+	* Overall profit = (t2Sell - t2Buy) + (t1Sell - t1Buy)
 	* 
 	* the chronical order of these 4 price points are: t1Buy, t1Sell, t2Buy, t2Sell
 	* 
@@ -88,7 +88,7 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 	* (t2Sell - t2Buy) + (t1Sell - t1Buy) = t2Sell - (t2Buy - t1Sell + t1Buy)
 	*                                                \______________________/
 	*                                                 this is the intermediate 3
-	* intermediate 3 is being subtracted in the overall equation, so I want to minimum of this module.
+	* intermediate 3 is being subtracted in the overall equation, so I want the minimum of this module.
 	* 
 	* Final value: t2Sell - (t2Buy - t1Sell + t1Buy), obviously I want the maximum of this final value.
 	* 
@@ -112,7 +112,7 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 	* when I'm in the 2nd upward trend, here is the change of the 3 intermediate values and the final:
 	* intermediate 1: t1Buy                                     don't update
 	* intermediate 2: (t1Sell - t1Buy),                         update
-	* intermediate 3: (t2But - t1Sell + t1Buy)                  don't udpate
+	* intermediate 3: (t2Buy - t1Sell + t1Buy)                  don't udpate
 	* final         : t2Sell - (t2Buy - t1Sell + t1Buy)         update
 	* 
 	* every time I update "final", I rely on an "old" "intermediate 3", but that is OK, because even an "old" "intermediate 3"
@@ -120,14 +120,18 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 	*/
 
 
-	//--------------------------------------------------------------------------------
-	// still wrong
+	//--------------------------------------------------------------------------------------//
+	
+
+
+	// Incorrect solution
 	// I'm really trying to mimic the correct solution.
 	// The intuition is that a big down turn after selling 1st share is a good thing for buying 2nd share.
 	// So I track such said "down turn".
 	// but the problem is that this said "down turn" is only the result of current_price - t1Sell.
 	// If this "down turn" can replace the "intermediate 3" in the correct solution, then this solution can be correct too.
 	// but obviously the calculation of this said "down turn" is different than that of the "intermediate 3" in the correct solution.
+
 	class Solution11
 	{
 		int maxProfit(vector<int>& prices)
@@ -322,11 +326,11 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 		}
 	};
 
-	class Solution3
+
+
+
+	class Solution3     // correct but slow
 	{
-		/*
-		* This solution is correct, but is slow.
-		*/
 		int maxProfit2Transactions(vector<int>const & lowsHighs)
 		{
 			// Note that this function assumes that lowsHighs must end with a high point.
@@ -532,7 +536,7 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 
 
 
-
+	// Incorrect solution
 	class Solution4
 	{
 		/*
@@ -557,7 +561,6 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 		*/
 
 		/*
-		* This solution is wrong.
 		* example: 6 1 3 2 4 7
 		* 7             *
 		* 6   *
@@ -615,18 +618,19 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 		}
 	};
 
+
+
+
 	class Solution5
 	{
 		/*
-		* This is the same principle as solution 4.
+		* This is the same principle as solution 4. Since Solution4 is wrong, so is this one.
 		* Upon further inspection of solution 4, I don't really need to create an array of deltas.
 		* When I examine an element in the delta's array, I only look at that element, not the ones
 		* in front of it or behind it. So I can calculate the delta as I go. Just iterate the price
 		* array and calculate the delta when I move each step forward.
 		*/
-		/*
-		* Well since Solution4 is wrong, so is this one.
-		*/
+
 	public:
 		int maxProfit(vector<int> prices)
 		{
@@ -668,6 +672,8 @@ namespace _0123_Best_Time_to_Buy_Sell_Stock_III {
 			return max(firstTradeMax, twoTradesMax);
 		}
 	};
+
+
 
 	// 2, 1, 4, 5, 2, 9, 7      11
 	// 6  1  3  2  4  7         7

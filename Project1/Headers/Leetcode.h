@@ -292,6 +292,10 @@ namespace _0927_Three_Equal_Parts {
 	void Test_0927_Three_Equal_Parts();
 }
 
+namespace _0928_Minimize_Malware_Spread_II {
+	void Test_0928_Minimize_Malware_Spread_II();
+}
+
 namespace _0939_Minimum_Area_Rectangle {
 	void Test_0939_Minimum_Area_Rectangle();
 }

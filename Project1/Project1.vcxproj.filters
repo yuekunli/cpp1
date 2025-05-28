@@ -530,5 +530,11 @@
     <ClCompile Include="Leetcode\0122_Best_Time_to_Buy_and_Sell_Stock_II.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Leetcode\0928_Minimize_Malware_Spread_II.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\0932_Beautiful_Array.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
