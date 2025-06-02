@@ -281,6 +281,23 @@ namespace _0936_Stamping_The_Sequence {
     //                               a  b  c  d  a
 	//          a  b  c  d  a
 	
+	// another example when a segment can be treated as an "any" type match, if it can be treated as suffix match,
+	// suffix match should be preferred.
+	// stamp :  a b x t x c b
+	//          0 1 2 3 4 5 6 7 8 9 10
+	// target   a b x t x c b b x c b
+	//                  a b x t x c b
+	//            a b x t x c b
+	//          a b x t x c b
+	// 
+	// target[0,6] is a full stamp, next I want to find an "any" type match.
+	// target[7,8] is a middle part match, target[7] is a suffix match.
+	// the middle part match is even longer than the suffix match, but obviously if target[7,8] is treated as a middle
+	// part match, target[9,10] is not a prefix, target becomes intractable.
+	// only way to create target is to treat target[7] as a suffix match, target[8,10] is another "any" type match
+
+
+
 	// Solution1 and Solution2 are primarily the same. Solution2 tries to simplify and streamline Solution1,
 	// but both solutions fail to consider reconciliation.
 
@@ -686,8 +703,7 @@ namespace _0936_Stamping_The_Sequence {
 		}
 	};
 
-	// this solution is incomplete, when reconcile, it's too complex to decide
-	// how far back I should erase those already recored results.
+	// accepted 3ms beats 86%
 	class Solution4
 	{
 	public:
@@ -711,20 +727,20 @@ namespace _0936_Stamping_The_Sequence {
 				if (matchTypeToFind == 0)
 				{
 					findMatchingFromBeginning(stamp, target, j, ml);
-
 					if (ml != 0)
 					{
-						r.emplace_back(j, 0);
-						j += ml;
-						pml = ml;
 						if (ml != stampLen)
 						{
 							matchTypeToFind = 0;
+							r.emplace_back(j, 0, ml, 0);
 						}
 						else
 						{
 							matchTypeToFind = 1;
+							r.emplace_back(j, 0, ml, 1);
 						}
+						j += ml;
+						pml = ml;
 					}
 					else
 					{
@@ -732,21 +748,28 @@ namespace _0936_Stamping_The_Sequence {
 						{
 							--j;
 							--pml;
+							r.rbegin()->matchLength--;
 						}
 						else if (r.size() >= 2)
 						{
-							auto [a1, b] = *(r.crbegin());
-							auto [a2, b] = *(r.crbegin() + 1);
-							pml = a1 - a2 - 1;
-							
-							r.erase(r.cend() - 1);
-
-							j -= 2;
-
-							// !!! ERASING JUST ONE PREVIOUS MATCH IS NOT ENOUGH  !!!
+							r.pop_back();
+							auto b = r.rbegin();
+							while (r.size() > 0 && b->matchLength == 1)
+							{
+								r.pop_back();
+								b = r.rbegin();
+							}
+							if (r.size() == 0)
+							{
+								return {};
+							}
+							j = b->targetStartIndex + b->matchLength - 1;
+							b->matchLength--;
+							pml = b->matchLength;
 
 							//        0  1  2  3  4  5  6  7  8  9
 							//                 a        a
+							//                 |-----|  |-----|
 							// target x  x  x  x  x  x  x  x  x  x  x
 							// stamp 
 							//                                   j
@@ -764,9 +787,6 @@ namespace _0936_Stamping_The_Sequence {
 							// but when I try 'j' at '5', the match length of this segment
 							// is already decremented by 1.
 							// what if previous match is only a 1-letter match?
-							// stamp: ffebb
-							// target: fffeffebbb
-							// ff + f + e
 							// 
 						}
 						else
@@ -777,7 +797,15 @@ namespace _0936_Stamping_The_Sequence {
 				}
 				else if (matchTypeToFind == 1)
 				{
-					findMatchingInMiddle(stamp, target, j, ms, ml);
+					findMatchingStampSuffix(stamp, target, j, ml); //prefer suffix match.
+					if (ml != 0)
+					{
+						ms = stampLen - ml;
+					}
+					else
+					{
+						findMatchingInMiddle(stamp, target, j, ms, ml);
+					}
 					if (ml == 0)
 					{
 						return {};
@@ -788,123 +816,46 @@ namespace _0936_Stamping_The_Sequence {
 						return {};
 					}
 
-					r.emplace_back(j, ms);
-
 					if (ms + ml != stampLen)
 					{
 						matchTypeToFind = 0;
+						r.emplace_back(j, ms, ml, 0);
 					}
 					else
 					{
 						matchTypeToFind = 1;
+						r.emplace_back(j, ms, ml, 1);
 					}
 					j += ml;
 					pml = ml;
 				}
 			}
-			return {};
-		}
-	};
+			// construct answer
+			deque<int> answerD;
 
-	namespace
-	{
-
-#if 0
-		bool combine(string& stamp, Record& a, string s)
-		{
-			if (a.matchType == 1)
+			for (int i = 0; i < r.size(); ++i)
 			{
-				return false;
-			}
-			int aEndIndex = a.stampStartIndex + a.matchLength;
-			if (stamp[aEndIndex] == c)
-			{
-				++a.matchLength;
-				if (a.stampStartIndex + a.matchLength == stampLen)
+				if (r[i].stampStartIndex == 0)
 				{
-					a.matchType == 1;
-				}
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-#endif
-	}
-
-
-#if 0
-	class solution5
-	{
-	public:
-		vector<int>movesToStamp(string stamp, string target)
-		{
-			deque<Record> r;
-			if (target[0] == stamp[0])
-			{
-				r.emplace_back(0, 0, 1, 0);
-			}
-			else
-			{
-				return {};
-			}
-			int i = 1;
-			while (r.size() != 0)
-			{
-				auto a = r.back();
-				if (a.matchType == 0)
-				{
-					if (target[i] == stamp[0])
-					{
-						r.emplace_back(i, 0, 1, 0);
-						++i;
-					}
-					else
-					{
-						bool ret = combine(stamp, r.back(), target[i]);
-						if (ret)
-						{
-							++i;
-						}
-						else
-						{
-							return {};
-						}
-					}
+					answerD.push_back(r[i].targetStartIndex);
 				}
 				else
 				{
-					auto b = stamp.find(target[i]);
-					if (b == stamp.size() - 1)
-					{
-						r.emplace_back(i, b, 1, 1);
-					}
-					else
-					{
-						r.emplace_back(i, b, 1, 0);
-					}
-					++i;
+					answerD.push_front(r[i].targetStartIndex - r[i].stampStartIndex);
 				}
 			}
-
-			if (r.size() == 0)
-			{
-				return {};
-			}
-
-			// construct the answer
+			vector<int> answer(answerD.cbegin(), answerD.cend());
+			return answer;
 		}
 	};
-#endif
+
 
 
 
 	void Test_0936_Stamping_The_Sequence()
 	{
 		int choice;
-		Solution3 s;
+		Solution4 s;
 		while (true)
 		{
 			cout << "1: manual test, 0: exit \n";
@@ -928,9 +879,16 @@ namespace _0936_Stamping_The_Sequence {
 
 				vector<int> answer = s.movesToStamp(stamp, target);
 
-				for (auto const& i : answer)
+				if (answer.size() == 0)
 				{
-					cout << i << ",  ";
+					cout << "[  ]";
+				}
+				else
+				{
+					for (auto const& i : answer)
+					{
+						cout << i << ",  ";
+					}
 				}
 				cout << '\n';
 			}
