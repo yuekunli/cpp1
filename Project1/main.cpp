@@ -6,7 +6,6 @@
 
 int main()
 {
-
     //-----------------------------------------------------------------------
 
     //Get_Kth_of_Two_Sorted_Arrays::Test_Get_Kth_of_Two_Sorted_Arrays();
@@ -191,7 +190,9 @@ int main()
 
     //_0927_Three_Equal_Parts::Test_0927_Three_Equal_Parts();
 
-    _0928_Minimize_Malware_Spread_II::Test_0928_Minimize_Malware_Spread_II();
+    //_0928_Minimize_Malware_Spread_II::Test_0928_Minimize_Malware_Spread_II();
+
+    _0936_Stamping_The_Sequence::Test_0936_Stamping_The_Sequence();
 
     //_0939_Minimum_Area_Rectangle::Test_0939_Minimum_Area_Rectangle();
 

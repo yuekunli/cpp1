@@ -296,6 +296,10 @@ namespace _0928_Minimize_Malware_Spread_II {
 	void Test_0928_Minimize_Malware_Spread_II();
 }
 
+namespace _0936_Stamping_The_Sequence {
+	void Test_0936_Stamping_The_Sequence();
+}
+
 namespace _0939_Minimum_Area_Rectangle {
 	void Test_0939_Minimum_Area_Rectangle();
 }

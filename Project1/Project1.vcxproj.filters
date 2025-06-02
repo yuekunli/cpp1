@@ -536,5 +536,11 @@
     <ClCompile Include="Leetcode\0932_Beautiful_Array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Leetcode\0934_Shortest_Bridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\0936_Stamping_The_Sequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

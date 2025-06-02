@@ -102,6 +102,8 @@
     <ClCompile Include="Leetcode\0927_Three_Equal_Parts.cpp" />
     <ClCompile Include="Leetcode\0928_Minimize_Malware_Spread_II.cpp" />
     <ClCompile Include="Leetcode\0932_Beautiful_Array.cpp" />
+    <ClCompile Include="Leetcode\0934_Shortest_Bridge.cpp" />
+    <ClCompile Include="Leetcode\0936_Stamping_The_Sequence.cpp" />
     <ClCompile Include="Leetcode\0939_Minimum_Area_Rectangle.cpp" />
     <ClCompile Include="Leetcode\1012_Numbers_With_Repeated_Digits.cpp" />
     <ClCompile Include="Leetcode\1032_Stream_of_Characters.cpp" />
