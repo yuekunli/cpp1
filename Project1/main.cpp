@@ -192,9 +192,11 @@ int main()
 
     //_0928_Minimize_Malware_Spread_II::Test_0928_Minimize_Malware_Spread_II();
 
-    _0936_Stamping_The_Sequence::Test_0936_Stamping_The_Sequence();
+    //_0936_Stamping_The_Sequence::Test_0936_Stamping_The_Sequence();
 
     //_0939_Minimum_Area_Rectangle::Test_0939_Minimum_Area_Rectangle();
+
+    _0940_Distinct_Subsequence_II::Test_0940_Distinct_Subsequences_II();
 
     //_1012_Numbers_With_Repeated_Digits::Test_1012_Numbers_With_Repeated_Digits();
 

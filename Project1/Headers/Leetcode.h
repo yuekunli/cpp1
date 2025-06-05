@@ -304,6 +304,10 @@ namespace _0939_Minimum_Area_Rectangle {
 	void Test_0939_Minimum_Area_Rectangle();
 }
 
+namespace _0940_Distinct_Subsequence_II {
+	void Test_0940_Distinct_Subsequences_II();
+}
+
 namespace _1012_Numbers_With_Repeated_Digits {
 	void Test_1012_Numbers_With_Repeated_Digits();
 }

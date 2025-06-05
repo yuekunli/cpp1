@@ -542,5 +542,8 @@
     <ClCompile Include="Leetcode\0936_Stamping_The_Sequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Leetcode\0940_Distinct_Subsequence_II.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

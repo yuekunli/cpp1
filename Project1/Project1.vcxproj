@@ -105,6 +105,7 @@
     <ClCompile Include="Leetcode\0934_Shortest_Bridge.cpp" />
     <ClCompile Include="Leetcode\0936_Stamping_The_Sequence.cpp" />
     <ClCompile Include="Leetcode\0939_Minimum_Area_Rectangle.cpp" />
+    <ClCompile Include="Leetcode\0940_Distinct_Subsequence_II.cpp" />
     <ClCompile Include="Leetcode\1012_Numbers_With_Repeated_Digits.cpp" />
     <ClCompile Include="Leetcode\1032_Stream_of_Characters.cpp" />
     <ClCompile Include="Leetcode\1044_Longest_Duplicate_Substring.cpp" />
