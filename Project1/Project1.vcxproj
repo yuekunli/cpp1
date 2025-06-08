@@ -106,6 +106,15 @@
     <ClCompile Include="Leetcode\0936_Stamping_The_Sequence.cpp" />
     <ClCompile Include="Leetcode\0939_Minimum_Area_Rectangle.cpp" />
     <ClCompile Include="Leetcode\0940_Distinct_Subsequence_II.cpp" />
+    <ClCompile Include="Leetcode\0943_Find_the_Shortest_Superstring.cpp" />
+    <ClCompile Include="Leetcode\0945_Minimum_Increment_to_Make_Array_Unique.cpp" />
+    <ClCompile Include="Leetcode\0946_Validate_Stack_Sequences.cpp" />
+    <ClCompile Include="Leetcode\0947_Most_Stones_Removed_with_Same_Row_or_Column.cpp" />
+    <ClCompile Include="Leetcode\0948_Bag_of_Tokens.cpp" />
+    <ClCompile Include="Leetcode\0949_Largest_Time_for_Given_Digits.cpp" />
+    <ClCompile Include="Leetcode\0950_Reveal_Cards_In_Increasing_Order.cpp" />
+    <ClCompile Include="Leetcode\0951_Flip_Equivalent_Binary_Trees.cpp" />
+    <ClCompile Include="Leetcode\0952_Largest_Component_Size_by_Common_Factor.cpp" />
     <ClCompile Include="Leetcode\1012_Numbers_With_Repeated_Digits.cpp" />
     <ClCompile Include="Leetcode\1032_Stream_of_Characters.cpp" />
     <ClCompile Include="Leetcode\1044_Longest_Duplicate_Substring.cpp" />

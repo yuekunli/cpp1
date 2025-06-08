@@ -196,7 +196,15 @@ int main()
 
     //_0939_Minimum_Area_Rectangle::Test_0939_Minimum_Area_Rectangle();
 
-    _0940_Distinct_Subsequence_II::Test_0940_Distinct_Subsequences_II();
+    //_0940_Distinct_Subsequence_II::Test_0940_Distinct_Subsequences_II();
+
+    //_0943_Find_the_Shortest_Superstring::Test_0943_Find_the_Shortest_Superstring();
+
+    //_0945_Minimum_Increment_to_Make_Array_Unique::Test_0945_Minimum_Increment_to_Make_Array_Unique();
+
+    //_0946_Validate_Stack_Sequences::Test_0946_Validate_Stack_Sequences();
+
+    _0952_Largest_Component_Size_by_Common_Factor::Test_0952_Largest_Component_Size_by_Common_Factor();
 
     //_1012_Numbers_With_Repeated_Digits::Test_1012_Numbers_With_Repeated_Digits();
 

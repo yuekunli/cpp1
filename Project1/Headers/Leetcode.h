@@ -308,6 +308,22 @@ namespace _0940_Distinct_Subsequence_II {
 	void Test_0940_Distinct_Subsequences_II();
 }
 
+namespace _0943_Find_the_Shortest_Superstring {
+	void Test_0943_Find_the_Shortest_Superstring();
+}
+
+namespace _0945_Minimum_Increment_to_Make_Array_Unique {
+	void Test_0945_Minimum_Increment_to_Make_Array_Unique();
+}
+
+namespace _0946_Validate_Stack_Sequences {
+	void Test_0946_Validate_Stack_Sequences();
+}
+
+namespace _0952_Largest_Component_Size_by_Common_Factor {
+	void Test_0952_Largest_Component_Size_by_Common_Factor();
+}
+
 namespace _1012_Numbers_With_Repeated_Digits {
 	void Test_1012_Numbers_With_Repeated_Digits();
 }
