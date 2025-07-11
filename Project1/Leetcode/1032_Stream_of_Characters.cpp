@@ -160,7 +160,26 @@ namespace _1032_Stream_of_Characters {
 		}
 	};
 
-	class StreamChecker2  // accepted.
+	// accepted, with destructor 504ms beat 6%
+	// without destructor 41ms beat 65%
+	/*
+	* Improvement idea:
+	* right now this trie has one and only one letter in each node,
+	* the idea for improvement is to make a split only when necessary
+	*                       a
+	*                     /   \
+	*                   bce    tr
+	*                  /   \
+	*                 fw    g
+	*                /  \
+	*               x    y
+	* 
+	* This trie represent 4 words: xwfecba, ywfecba, gecba, rta
+	* In another word, implement it in the way Cisco ACL radix trie is implemented.
+	* 
+	* This saves memory, but may not save time.
+	*/
+	class StreamChecker2
 	{
 		struct Node
 		{
@@ -174,8 +193,10 @@ namespace _1032_Stream_of_Characters {
 		void AddToTrie(string const & w)
 		{
 			Node* n = root;
-			for (char const& c : w)
+			auto len = w.size();
+			for (int i = len - 1; i >= 0; --i)
 			{
+				const char& c = w[i];
 				Node* nextNode = n->nextLevel[c - 'a'];
 				if (nextNode == nullptr)
 				{
@@ -223,7 +244,7 @@ namespace _1032_Stream_of_Characters {
 
 			for (string& w : words)
 			{
-				reverse(w.begin(), w.end());
+				//reverse(w.begin(), w.end());
 				AddToTrie(w);
 			}
 		}
@@ -240,10 +261,103 @@ namespace _1032_Stream_of_Characters {
 		}
 	};
 
+
+	/*
+	* The idea is to make a 2-level trie.
+	* first level has the last letter of each word
+	* second level has the second last letter of each word
+	* 
+	*                          +----...----+
+	*                          |  e ...    |
+	*                          +----...----+
+	*                          /   | ...|   \
+	*                            +-..-+
+	*                            |  t |
+	*                            +----+
+	*                               |
+	*                               an vector of words (all the words ending with "et" are saved here)
+	* The hope is that a 2-level trie can distribute all the "words" relatively evenly to each bucket,
+	* So that each vector of "words" on the 3rd level won't be too many.
+	*/       
+	// accepted but slow
+	class StreamChecker3
+	{
+	private:
+		vector<bool> singleLetterWords;
+		vector<vector<vector<string*>>>r;
+	public:
+		StreamChecker3(vector<string>& words)
+			:r(26, vector<vector<string*>>(26, vector<string*>())),
+			singleLetterWords(26, false)
+		{
+			for (auto & w : words)
+			{
+				if (w.size() == 1)
+				{
+					singleLetterWords[w[0] - 'a'] = true;
+				}
+				else
+				{
+					char const & last1 = w[w.size() - 1];
+					char const& last2 = w[w.size() - 2];
+
+					r[last1 - 'a'][last2 - 'a'].emplace_back(&w);
+				}
+			}
+		}
+		string streamSoFar;
+		bool query(char letter)
+		{
+			if (singleLetterWords[letter - 'a'])
+			{
+				return true;
+			}
+			else
+			{
+				if (streamSoFar.size() == 0)
+				{
+					streamSoFar.append(std::initializer_list<char>{letter});
+					return false;
+				}
+				streamSoFar.append(std::initializer_list<char>{letter});
+				char const& last1 = streamSoFar[streamSoFar.size() - 1];
+				char const& last2 = streamSoFar[streamSoFar.size() - 2];
+
+				auto const& arrayOfWords = r[last1 - 'a'][last2 - 'a'];
+				for (auto const& w : arrayOfWords)
+				{
+					auto len = w->size();
+					if (len == 2)
+					{
+						return true;
+					}
+					else
+					{
+						bool found = true;
+						int i,j;
+						for (i = len - 3, j = streamSoFar.size() - 3; i >= 0 && j >= 0; --i, --j)
+						{
+							if ((*w)[i] != streamSoFar[j])
+							{
+								found = false;
+								break;
+							}
+						}
+						if (found && (i == -1))
+						{
+							return true;
+						}
+					}					
+				}
+				return false;
+			}
+		}
+	};
+
 	void Test_1032_Stream_of_Characters()
 	{
 		vector<string> words{ "cd", "f", "kl" };
-		StreamChecker2* obj = new StreamChecker2(words);
+		StreamChecker3* obj = new StreamChecker3(words);
 		char letters[] = "abcdefghijkl";
 		for (int i = 0; i < size(letters)-1; i++)  
 			// there are 12 characters in "letters", but its size (or sizeof) is 13, the character in #12 (0-index) cell is '\0'

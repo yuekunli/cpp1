@@ -324,12 +324,24 @@ namespace _0952_Largest_Component_Size_by_Common_Factor {
 	void Test_0952_Largest_Component_Size_by_Common_Factor();
 }
 
+namespace _0954_Array_of_Doubled_Pairs {
+	void Test_0954_Array_of_Doubled_Pairs();
+}
+
+namespace _0956_Tallest_Billboard {
+	void Test_0956_Tallest_Billboard();
+}
+
 namespace _1012_Numbers_With_Repeated_Digits {
 	void Test_1012_Numbers_With_Repeated_Digits();
 }
 
 namespace _1032_Stream_of_Characters {
 	void Test_1032_Stream_of_Characters();
+}
+
+namespace _1036_Escape_a_Large_Maze {
+	void Test_1036_Escape_a_Large_Maze();
 }
 
 namespace _1044_Longest_Duplicate_Substring {

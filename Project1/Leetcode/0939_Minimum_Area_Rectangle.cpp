@@ -179,7 +179,7 @@ namespace _0939_Minimum_Area_Rectangle {
 							// This is good when the vertical lines are in random order in map "m",
 							// but because map "m" is an ordered map, this generic approach is not necessary
 
-							auto it = lower_bound(xCoordinatesSet.cbegin(), xCoordinatesSet.cend(), a.first);
+							auto it = xCoordinatesSet.lower_bound(a.first);
 							if (it == xCoordinatesSet.cend())
 							{
 								auto it2 = xCoordinatesSet.crbegin();

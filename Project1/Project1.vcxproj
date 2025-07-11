@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -115,8 +115,11 @@
     <ClCompile Include="Leetcode\0950_Reveal_Cards_In_Increasing_Order.cpp" />
     <ClCompile Include="Leetcode\0951_Flip_Equivalent_Binary_Trees.cpp" />
     <ClCompile Include="Leetcode\0952_Largest_Component_Size_by_Common_Factor.cpp" />
+    <ClCompile Include="Leetcode\0954_Array_of_Doubled_Pairs.cpp" />
+    <ClCompile Include="Leetcode\0956_Tallest_Billboard.cpp" />
     <ClCompile Include="Leetcode\1012_Numbers_With_Repeated_Digits.cpp" />
     <ClCompile Include="Leetcode\1032_Stream_of_Characters.cpp" />
+    <ClCompile Include="Leetcode\1036_Escape_a_Large_Maze.cpp" />
     <ClCompile Include="Leetcode\1044_Longest_Duplicate_Substring.cpp" />
     <ClCompile Include="Leetcode\1048_Longest_String_Chain.cpp" />
     <ClCompile Include="Leetcode\1092_Shortest_Common_Supersequence.cpp" />

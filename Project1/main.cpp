@@ -3,6 +3,36 @@
 
 #include "Problems.h"
 #include "Leetcode.h"
+#include<unordered_set>
+#include<vector>
+#include<iostream>
+
+using namespace std;
+void test()
+{
+    vector<int> v{ 1,2,3,4,5,6,7,1,2,3,4 };
+    unordered_multiset<int>s(v.cbegin(), v.cend());
+
+    cout << s.count(1) << "\n";
+    s.erase(1);
+    s.erase(2);
+
+    for (int const& n : s)
+    {
+        cout << n << ", ";
+    }
+    cout << "\n";
+
+    auto it = s.find(3);
+    s.erase(it);
+
+    for (int const& n : s)
+    {
+        cout << n << ", ";
+    }
+    cout << "\n";
+
+}
 
 int main()
 {
@@ -204,11 +234,17 @@ int main()
 
     //_0946_Validate_Stack_Sequences::Test_0946_Validate_Stack_Sequences();
 
-    _0952_Largest_Component_Size_by_Common_Factor::Test_0952_Largest_Component_Size_by_Common_Factor();
+    //_0952_Largest_Component_Size_by_Common_Factor::Test_0952_Largest_Component_Size_by_Common_Factor();
+
+    //_0954_Array_of_Doubled_Pairs::Test_0954_Array_of_Doubled_Pairs();
+
+    //_0956_Tallest_Billboard::Test_0956_Tallest_Billboard();
 
     //_1012_Numbers_With_Repeated_Digits::Test_1012_Numbers_With_Repeated_Digits();
 
     //_1032_Stream_of_Characters::Test_1032_Stream_of_Characters();
+
+    _1036_Escape_a_Large_Maze::Test_1036_Escape_a_Large_Maze();
 
     //_1044_Longest_Duplicate_Substring::Test_1044_Longest_Duplicate_Substring();
 
