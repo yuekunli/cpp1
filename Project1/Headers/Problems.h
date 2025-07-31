@@ -74,5 +74,12 @@ namespace Merge_In_Place {
 namespace Optimal_Search_Tree {
 	void test_print_tree_neatly();
 	void test_optimal_search_tree();
+}
 
+namespace Ukkonen_Suffix_Tree {
+	void Test_Ukkonen_Suffix_Tree();
+}
+
+namespace Ukkonen_Suffix_Tree_Lyk {
+	void Test_Ukkonen_Suffix_Tree_Lyk();
 }

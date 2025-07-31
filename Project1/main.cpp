@@ -10,32 +10,17 @@
 using namespace std;
 void test()
 {
-    vector<int> v{ 1,2,3,4,5,6,7,1,2,3,4 };
-    unordered_multiset<int>s(v.cbegin(), v.cend());
 
-    cout << s.count(1) << "\n";
-    s.erase(1);
-    s.erase(2);
+    const char* text = "abcde";
 
-    for (int const& n : s)
-    {
-        cout << n << ", ";
-    }
-    cout << "\n";
-
-    auto it = s.find(3);
-    s.erase(it);
-
-    for (int const& n : s)
-    {
-        cout << n << ", ";
-    }
-    cout << "\n";
+    int v = (int)text[1] - (int)' ';
+    cout << v << std::endl;
 
 }
 
 int main()
 {
+    
     //-----------------------------------------------------------------------
 
     //Get_Kth_of_Two_Sorted_Arrays::Test_Get_Kth_of_Two_Sorted_Arrays();
@@ -71,6 +56,8 @@ int main()
     //Optimal_Search_Tree::test_print_tree_neatly();
 
     //Optimal_Search_Tree::test_optimal_search_tree();
+
+    //Ukkonen_Suffix_Tree::Test_Ukkonen_Suffix_Tree();
 
     //-----------------------------------------------------------------------
 
@@ -244,13 +231,13 @@ int main()
 
     //_1032_Stream_of_Characters::Test_1032_Stream_of_Characters();
 
-    _1036_Escape_a_Large_Maze::Test_1036_Escape_a_Large_Maze();
+    //_1036_Escape_a_Large_Maze::Test_1036_Escape_a_Large_Maze();
 
     //_1044_Longest_Duplicate_Substring::Test_1044_Longest_Duplicate_Substring();
 
     //_1048_Longest_String_Chain::Test_1048_Longest_String_Chain();
 
-    //_1092_Shortest_Common_Supersequence::Test_1092_Shortest_Common_Supersequence();
+    _1092_Shortest_Common_Supersequence::Test_1092_Shortest_Common_Supersequence();
 
     //_1191_K_Concatenation_Maximum_Sum::Test_1191_K_Concatenation_Maximum_Sum();
 

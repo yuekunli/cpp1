@@ -581,5 +581,11 @@
     <ClCompile Include="Leetcode\1036_Escape_a_Large_Maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Problems\Ukkonen_Suffix_Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Problems\Ukkonen_Suffix_Tree_Lyk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

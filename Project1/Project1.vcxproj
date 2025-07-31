@@ -203,6 +203,8 @@
     <ClCompile Include="Problems\Related_Groups.cpp" />
     <ClCompile Include="Problems\Rotate_In_Place.cpp" />
     <ClCompile Include="Problems\Search_Missing_In_Consecutive_Sorted_Array.cpp" />
+    <ClCompile Include="Problems\Ukkonen_Suffix_Tree.cpp" />
+    <ClCompile Include="Problems\Ukkonen_Suffix_Tree_Lyk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Leetcode.h" />
