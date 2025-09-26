@@ -21,7 +21,7 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 	/* 
 	* Solution1 tries to use just 1 repitition.
 	* i.e., if the input is "abcd", just make it "abcdabcd", and based on the
-	* pattern in "abcdabcd", I try to figure out what the result would be had I
+	* pattern in "abcdabcd", I try to figure out what the result would be, had I
 	* contatenated k times. But solution 1 has errors.
 	* 
 	* Solution2 fixes the error, but made it a little too complicated.
@@ -41,8 +41,8 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 	*             |                                               |
 	* 
 	* I first decide to include all the full arrays in the middle. Then I find out the biggest subarray
-	* going from the end towards the beginning (i.e. [g,k]) and the biggest subarray going from the
-	* beginning to the end (i.e. [a,c]) So the final result would be [g,k] + cycles + [a,c].
+	* going from the end towards the beginning (i.e. [g <- k]) and the biggest subarray going from the
+	* beginning to the end (i.e. [a -> c]) So the final result would be [g,k] + cycles + [a,c].
 	* How to find out [g,k] and [a,c], just try to find the max sum subarray in a 1 repitition case.
 	* i.e. find the max sum subarray within this:
 	* a b c d e f g h i j k a b c d e f g h i j k
@@ -242,12 +242,13 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 		/*
 		* Using this to demonstrate the logic. This solution doesn't consider overflowing the upper limit of "int"
 		* 
-		* What is the max-sum-subarray of the original array is somewhere in the middle?
+		* What if the max-sum-subarray of the original array is somewhere in the middle?
 		* a, b, c, d, e, f, g, h, i,
 		*       \___________/
 		*         Let's say this is the subarray that yields the max sum.
 		* How can I just use this sum and add the the sum of the original array?
-		* Note that if the max-sum-subarray is like this (i.e. in the middle), the original array's sum must be negative
+		* Note that if the max-sum-subarray is like this (i.e. in the middle), the sum of subarray [h, i] must be negative,
+		* likewise, the sum of subarray [a, b] must be negative.
 		* Otherwise two-cycle concatenation will yield something different.
 		* So I actually won't add anything to this subarray's sum.
 		*/
@@ -354,9 +355,9 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 		* When I calculate the sum of the original array, I ignore the possibility that
 		* the sum can overflow the limit of "int".
 		* 
-		* This is accepted by leetcode, maybe it's lucky that their test case where the
-		* sum of the original array overflows the limit of "int" actually is a test case
-		* where k is 2, so I don't really get to the "accumulate" call in that test case.
+		* This is accepted by leetcode, 
+		* maybe either they don't have a test case where sum of the original array overflows the limit of "int" 
+		* or the test case where it does overflow has k = 2, so I don't really get to the "accumulate" call in that test case.
 		* 
 		* Question:
 		* If I do consider that, is this code good enough?
@@ -399,6 +400,145 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 		}
 	};
 
+	// accepted 4ms beat 30%
+	class Solution5
+	{
+		const int MOD_BASE = 1'000'000'007;
+
+	public:
+
+		int oneOrTwoMaxSum(vector<int>& arr, int k, int& oneArrSum)
+		{
+			size_t len = arr.size();
+			size_t len2 = len * k;
+
+			long long int currentSum = 0ll;
+			long long int maxSum = 0ll;
+			long long int _oneArrSum = 0ll;
+			size_t j = 0;
+			for (size_t i = 0; i < len2; ++i)
+			{
+				if (i < len)
+				{
+					_oneArrSum += arr[i];
+					j = i;
+				}
+				else
+				{
+					j = i % len;
+				}
+				currentSum += arr[j];
+				if (currentSum < 0)
+					currentSum = 0;
+				if (maxSum < currentSum)
+					maxSum = currentSum;
+			}
+			if (_oneArrSum > 0)
+			{
+				oneArrSum = _oneArrSum % MOD_BASE;
+			}
+			return maxSum % MOD_BASE;
+		}
+
+		int kConcatenationMaxSum(vector<int>& arr, int k)
+		{
+			int oneArrSum = 0;
+			if (k <= 2)
+			{
+				return oneOrTwoMaxSum(arr, k, oneArrSum);
+			}
+			else
+			{
+				int sum1 = oneOrTwoMaxSum(arr, 2, oneArrSum);
+				if (oneArrSum > 0)
+				{
+					int maxCapacity = MOD_BASE / oneArrSum;
+					int maxLoad = maxCapacity * oneArrSum;
+					int remain = k - 2;
+					int total = 0;
+					while (remain > maxCapacity)
+					{
+						total += maxLoad;
+						total %= MOD_BASE;
+						remain -= maxCapacity;
+					}
+					total += (remain * oneArrSum);
+					total %= MOD_BASE;
+					total += sum1;
+					total %= MOD_BASE;
+					return total;
+				}
+				else
+				{
+					return sum1;
+				}
+			}
+		}
+	};
+
+	// accepted 0ms beat 100%
+	class Solution6
+	{
+		const int MOD_BASE = 1'000'000'007;
+
+	public:
+
+		int oneOrTwoMaxSum(vector<int>& arr, int k, int& oneArrSum)
+		{
+			size_t len = arr.size();
+			size_t len2 = len * k;
+
+			long long int currentSum = 0ll;
+			long long int maxSum = 0ll;
+			long long int _oneArrSum = 0ll;
+			size_t j = 0;
+			for (size_t i = 0; i < len2; ++i)
+			{
+				if (i < len)
+				{
+					_oneArrSum += arr[i];
+					j = i;
+				}
+				else
+				{
+					j = i % len;
+				}
+				currentSum += arr[j];
+				if (currentSum < 0)
+					currentSum = 0;
+				if (maxSum < currentSum)
+					maxSum = currentSum;
+			}
+			if (_oneArrSum > 0)
+			{
+				oneArrSum = _oneArrSum % MOD_BASE;
+			}
+			return maxSum % MOD_BASE;
+		}
+
+		int kConcatenationMaxSum(vector<int>& arr, int k)
+		{
+			int oneArrSum = 0;
+			if (k <= 2)
+			{
+				return oneOrTwoMaxSum(arr, k, oneArrSum);
+			}
+			else
+			{
+				int sum1 = oneOrTwoMaxSum(arr, 2, oneArrSum);
+				if (oneArrSum > 0)
+				{
+					long long unsigned total = (long long unsigned)(k - 2) * (long long unsigned)oneArrSum;
+					total += sum1;
+					return total % MOD_BASE;
+				}
+				else
+				{
+					return sum1;
+				}
+			}
+		}
+	};
 
 	class BruteForceSolution
 	{
@@ -490,7 +630,7 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 		string arrInStr;
 		int k;
 		int option;
-		Solution3 s;
+		Solution5 s;
 		BruteForceSolution bs;
 		AutoTest atest;
 

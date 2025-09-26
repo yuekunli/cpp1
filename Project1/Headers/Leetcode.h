@@ -360,8 +360,24 @@ namespace _1191_K_Concatenation_Maximum_Sum {
 	void Test_1191_K_Concatenation_Maximum_Sum();
 }
 
-namespace _1239_Tiling_Rectangle_With_Fewest_Squares {
-	void Test_1239_Tiling_Rectangle_With_Fewest_Squares();
+namespace _1192_Critical_Connections_in_a_Network {
+	void Test_1192_Critical_Connections_in_a_Network();
+}
+
+namespace _1203_Sort_Items_by_Groups_Respecting_Dependencies {
+	void Test_1203_Sort_Items_by_Groups_Respecting_Dependencies();
+}
+
+namespace _1210_Minimum_Moves_to_Reach_Target_With_Rotations {
+	void Test_1210_Minimum_Moves_to_Reach_Target_With_Rotations();
+}
+
+namespace _1240_Tiling_Rectangle_With_Fewest_Squares {
+	void Test_1240_Tiling_Rectangle_With_Fewest_Squares();
+}
+
+namespace _1250_Check_Good_Array {
+	void Test_1250_Check_Good_Array();
 }
 
 namespace _1284_Min_Flips_Convert_To_Zero_Matrix {

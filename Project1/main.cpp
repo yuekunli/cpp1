@@ -1,21 +1,35 @@
-
 // exclude these warnings: 26495;6293;4018;4129;4566;26451;4267;4244
 
 #include "Problems.h"
 #include "Leetcode.h"
-#include<unordered_set>
+
 #include<vector>
 #include<iostream>
 
-using namespace std;
-void test()
-{
+namespace {
+    using namespace std;
+    void test()
+    {
+        const char* text = "abcde";
 
-    const char* text = "abcde";
+        int v = (int)text[1] - (int)' ';
+        cout << v << std::endl;
+    }
 
-    int v = (int)text[1] - (int)' ';
-    cout << v << std::endl;
+    void test2()
+    {
+        vector<pair<pair<int, int>, pair<int, int>>> deq;
 
+        deq.emplace_back(pair<int, int>{1,2}, pair<int, int>{3,4});
+
+        //deq.emplace_back(initializer_list<int>{ 5,6 }, initializer_list<int>{ 7,8 });
+
+        deq.emplace_back(piecewise_construct, forward_as_tuple(5, 6), forward_as_tuple(7, 8));
+
+        vector<pair<int, int>> deq2;
+
+        deq2.emplace_back(1, 2);
+    }
 }
 
 int main()
@@ -237,11 +251,19 @@ int main()
 
     //_1048_Longest_String_Chain::Test_1048_Longest_String_Chain();
 
-    _1092_Shortest_Common_Supersequence::Test_1092_Shortest_Common_Supersequence();
+    //_1092_Shortest_Common_Supersequence::Test_1092_Shortest_Common_Supersequence();
 
     //_1191_K_Concatenation_Maximum_Sum::Test_1191_K_Concatenation_Maximum_Sum();
 
-    //_1239_Tiling_Rectangle_With_Fewest_Squares::Test_1239_Tiling_Rectangle_With_Fewest_Squares();
+    //_1192_Critical_Connections_in_a_Network::Test_1192_Critical_Connections_in_a_Network();
+
+    //_1203_Sort_Items_by_Groups_Respecting_Dependencies::Test_1203_Sort_Items_by_Groups_Respecting_Dependencies();
+
+    //_1210_Minimum_Moves_to_Reach_Target_With_Rotations::Test_1210_Minimum_Moves_to_Reach_Target_With_Rotations();
+
+    //_1240_Tiling_Rectangle_With_Fewest_Squares::Test_1239_Tiling_Rectangle_With_Fewest_Squares();
+
+    _1250_Check_Good_Array::Test_1250_Check_Good_Array();
 
     //_1284_Min_Flips_Convert_To_Zero_Matrix::Test_1284_Min_Flips_Convert_To_Zero_Matrix();
 

@@ -1,6 +1,6 @@
 #include "LibHeaders.h"
 
-namespace _1239_Tiling_Rectangle_With_Fewest_Squares {
+namespace _1240_Tiling_Rectangle_With_Fewest_Squares {
 
 	using namespace std;
 
@@ -88,7 +88,7 @@ namespace _1239_Tiling_Rectangle_With_Fewest_Squares {
 		}
 	};
 
-	void Test_1239_Tiling_Rectangle_With_Fewest_Squares()
+	void Test_1240_Tiling_Rectangle_With_Fewest_Squares()
 	{
 		Solution solu;
 		int n, m;

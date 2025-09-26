@@ -125,7 +125,13 @@
     <ClCompile Include="Leetcode\1092_Shortest_Common_Supersequence.cpp" />
     <ClCompile Include="Leetcode\1146_Snapshot_Array.cpp" />
     <ClCompile Include="Leetcode\1191_K_Concatenation_Maximum_Sum.cpp" />
-    <ClCompile Include="Leetcode\1239_Tiling_Rectangle_With_Fewest_Squares.cpp" />
+    <ClCompile Include="Leetcode\1192_Critical_Connections_in_a_Network.cpp" />
+    <ClCompile Include="Leetcode\1203_Sort_Items_by_Groups_Respecting_Dependencies.cpp" />
+    <ClCompile Include="Leetcode\1210_Minimum_Moves_to_Reach_Target_With_Rotations.cpp" />
+    <ClCompile Include="Leetcode\1223_Dice_Roll_Simulation.cpp" />
+    <ClCompile Include="Leetcode\1240_Tiling_Rectangle_With_Fewest_Squares.cpp" />
+    <ClCompile Include="Leetcode\1250_Check_Good_Array.cpp" />
+    <ClCompile Include="Leetcode\1255_Maximum_Score_Words_Formed_by_Letters.cpp" />
     <ClCompile Include="Leetcode\1284_Min_Flips_Convert_To_Zero_Matrix.cpp" />
     <ClCompile Include="Leetcode\1293_Shortest_Path_With_Obstacles_Elimination.cpp" />
     <ClCompile Include="Leetcode\1301_Number_of_Paths_with_Max_Score.cpp" />

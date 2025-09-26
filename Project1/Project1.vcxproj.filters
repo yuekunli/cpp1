@@ -296,7 +296,7 @@
     <ClCompile Include="Leetcode\1191_K_Concatenation_Maximum_Sum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Leetcode\1239_Tiling_Rectangle_With_Fewest_Squares.cpp">
+    <ClCompile Include="Leetcode\1240_Tiling_Rectangle_With_Fewest_Squares.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Leetcode\1284_Min_Flips_Convert_To_Zero_Matrix.cpp">
@@ -585,6 +585,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Problems\Ukkonen_Suffix_Tree_Lyk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1192_Critical_Connections_in_a_Network.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1203_Sort_Items_by_Groups_Respecting_Dependencies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1210_Minimum_Moves_to_Reach_Target_With_Rotations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1223_Dice_Roll_Simulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1250_Check_Good_Array.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Leetcode\1255_Maximum_Score_Words_Formed_by_Letters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

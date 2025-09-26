@@ -1,0 +1,228 @@
+#include<vector>
+#include<iostream>
+#include<unordered_map>
+#include<forward_list>
+
+namespace _Maximum_Score_Words {
+
+    using namespace std;
+
+    /**
+     * words: aaab, ac, ac, ac
+     * letters: a, a, a, b, c, c, c
+     * scores: a:5, b:10, c:7
+     *
+     * candidates:
+     * aaab --> 25
+     * ac, ac, ac --> 36
+     *
+     * For a single word, "aaab" is the most valuable word.
+     * It's a wrong strategy to always make the most valualbe word that can be made with current available ingredients.
+     */
+    /*
+    * Let's say there are 5 words in the pool of words.
+    * The first 2 words can make 4 different collections, namely pick neither, pick 1st, pick 2nd, and pick both.
+    * Each case result in a string of still available letters. Now I'm considering 3rd word, try add this 3rd word in
+    * all 4 situations, if the 3rd word can be formed with the available ingredients, add the new "remaining" ingredients
+    * to the linked-list.
+    * Worst case, if there are currently 4 situations, when considering 1 more word, it can create another 4 situations,
+    * and the old 4 situations have to be kept as well, because I don't know if next word can be formed by some
+    * ingredient string in some of those 4 old situations.
+    * Basically, when considering a new word, it can potentially double the total situation.
+    * This is basically a 2^x exponential growth. But I need to also put these ingredients strings in an unordered_set
+    * in order to prevent duplication.
+    */
+    // accepted, 5ms beat 59%
+    class Solution
+    {
+        vector<int>letterCount{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+        string getIngredientsString(vector<char>& letters)
+        {
+            unsigned char index;
+            size_t len = letters.size();
+            for (auto const& a : letters)
+            {
+                index = a - 'a';
+                letterCount[index] += 1;
+            }
+
+            string s(len, ' ');
+            int k = 0;
+            for (int i = 0; i < 26; ++i)
+            {
+                if (letterCount[i] > 0)
+                {
+                    for (int j = 0; j < letterCount[i]; ++j)
+                    {
+                        s[k++] = 'a' + i;
+                    }
+                }
+            }
+            return s;
+        }
+
+        // "ingredients": currently available letters
+        // "word": check if this word can be formed by currently available ingredients
+        string checkFeasibilityAndGetRemainingIngredients(string const& ingredients, string const& word, bool& canMake, vector<int> const& letterScores, int& wordScore)
+        {
+            if (ingredients.size() < word.size())
+            {
+                canMake = false;
+                wordScore = 0;
+                return "";
+            }
+
+            fill(letterCount.begin(), letterCount.end(), 0);
+            unsigned char index;
+            wordScore = 0;
+
+            size_t returnedLength = ingredients.size() - word.size(); // the length of the returned ingredients string
+            for (auto const& a : ingredients)
+            {
+                index = a - 'a';
+                letterCount[index] += 1;
+            }
+
+            for (auto const& a : word)
+            {
+                index = a - 'a';
+                if (letterCount[index] == 0)
+                {
+                    canMake = false;
+                    wordScore = 0;
+                    return "";
+                }
+                letterCount[index] -= 1;
+                wordScore += letterScores[index];
+            }
+            string ret(returnedLength, ' ');
+            int k = 0;
+            for (int i = 0; i < 26; ++i)
+            {
+                if (letterCount[i] > 0)
+                {
+                    for (int j = 0; j < letterCount[i]; ++j)
+                    {
+                        ret[k++] = 'a' + i;
+                    }
+                }
+            }
+            canMake = true;
+            return ret;
+        }
+
+    public:
+        int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& letterScores)
+        {
+            string initialIngredients = getIngredientsString(letters);
+
+            int maxScore = 0;
+
+            unordered_map<string, int> records;
+
+            forward_list<string> ingredientsArray;
+
+            records.emplace(initialIngredients, 0);
+
+            ingredientsArray.emplace_front(initialIngredients);
+
+            auto itLast = ingredientsArray.begin();
+
+            bool canMake;
+            int wordScore;
+
+            int listLength = 1;
+            // I'm iterating a linked list while adding new elements to the linked list simultaneously.
+            // I must remember the length of the linked-list when I begin to examine a new word.
+            // I must not compare this new word against a situation generated by this new word.
+            for (auto const& w : words)
+            {
+                int counter = 0;
+                int newAdded = 0;
+                for (auto it = ingredientsArray.begin(); counter < listLength; ++it, ++counter)
+                {
+                    string& ingredients = *it;
+                    string newIngredients = checkFeasibilityAndGetRemainingIngredients(ingredients, w, canMake, letterScores, wordScore);
+                    if (canMake)
+                    {
+                        int currentScore = records[ingredients];
+                        if (currentScore + wordScore > maxScore)
+                        {
+                            maxScore = currentScore + wordScore;
+                        }
+                        if (records.count(newIngredients) == 0)
+                        {
+                            records[newIngredients] = currentScore + wordScore;
+                            ingredientsArray.insert_after(itLast, newIngredients);
+                            ++itLast;
+                            ++newAdded;
+                        }
+                    }
+                }
+                listLength += newAdded;
+            }
+            return maxScore;
+        }
+    };
+
+
+    /**
+     * I have the pool of words, the maximum score I can get, regardless of the ingredients, is to include
+     * all words. What is the 2nd highest score possible? Remove the words that worth the least points.
+     * What is the 3rd, 4th, 5th, ... highest points?
+     * Try these possible words collection against the full ingredients, once there is a collection that can be
+     * constructed, I find my answer.
+     * This is similar to a greedy algorithm problem, where I use a heap and repeatedly take the top of the heap
+     * and also insert something back to the heap.
+     * But if the eventual answer is 0, i.e. the initial ingredients can build any word, then this idea is very time costly.
+     */
+    class Solution2
+    {
+
+    };
+
+    void test1()
+    {
+        vector<string>words{ "dog", "cat", "dad", "good" };
+        vector<char>letters{ 'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o' };
+        vector<int>scores{ 1,0,9,5,0,0,3,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0 };
+        Solution solu;
+        cout << solu.maxScoreWords(words, letters, scores) << endl;
+    }
+
+    void test2()
+    {
+        vector<string>words{ "xxxz", "ax", "bx", "cx" };
+        vector<char>letters{ 'z', 'a', 'b', 'c', 'x', 'x', 'x' };
+        vector<int>scores{ 4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,10 };
+        Solution solu;
+        cout << solu.maxScoreWords(words, letters, scores) << endl;
+    }
+
+    void test3()
+    {
+        vector<string>words{ "leetcode" };
+        vector<char>letters{ 'l', 'e', 't', 'c', 'o', 'd' };
+        vector<int>scores{ 0,0,1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0 };
+        Solution solu;
+        cout << solu.maxScoreWords(words, letters, scores) << endl;
+    }
+
+    void test4()
+    {
+        vector<string>words{ "aaab", "ac", "ac", "ac" };
+        vector<char>letters{ 'a', 'a', 'a', 'b', 'c', 'c', 'c' };
+        vector<int>scores{ 5, 10, 7, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+        Solution solu;
+        cout << solu.maxScoreWords(words, letters, scores) << endl;
+    }
+
+    void Test_Maximum_Score_Words()
+    {
+        test1();
+        test2();
+        test3();
+        test4();
+    }
+}

@@ -6,6 +6,7 @@
 #include<unordered_set>
 #include<algorithm>
 #include<numeric>
+#include<cstdint>
 
 namespace _0493_Reverse_Pairs {
 
@@ -98,7 +99,7 @@ namespace _0493_Reverse_Pairs {
 	};
 
 
-	class Solution3  // accepted by leetcode
+	class Solution3  // accepted by leetcode, 527ms beat 40%
 	{
 		void addToBIT(vector<int>& bit, int index)
 		{
@@ -130,7 +131,7 @@ namespace _0493_Reverse_Pairs {
 
 			for (int i = 0; i < n; i++)
 			{
-				if (m.count(nums[i]) == 0)
+				if (!m.contains(nums[i]))
 				{
 					m[nums[i]] = 0;  // this is just to create an entry in the map
 					composite.emplace_back(nums[i]);
@@ -162,7 +163,10 @@ namespace _0493_Reverse_Pairs {
 				int count = getFromBIT(bit, (int)bIndex);
 				// counting the number of numbers that are smaller than 'b', those numbers should appear before 'a' in the original vector.
 				// original vector:  5, 9, 4
-				// '5' and '9' are in the BIT. search '8' in the BIT. there is 1 number ('5') that is smaller than it.
+				// '5' and '9' are in the BIT. Now I'm on '4' whose 2-time multiple is '8'. I know 8 has an index of 'x' in the composite array.
+				// Got to the BIT array, start at index 'x'. Iteratively check responsible-range, going from index 'x' all the way to index '0'.
+				// Every element in the BIT tells how many numbers have tallied in its responsible range.
+				// there is 1 number ('5') that is smaller than it.
 				// '4' is the 3rd number in the original vector, so i is '2'. 2 is also the number of numbers that appear before '4' in the original vector.
 				// So 2 numbers appear before '4', one of them is smaller than '8', so 2-1=1 of them is greater than '8'.
 				// that number (the one greater than '8'), together with '4' form a "reverse-pair"
@@ -173,6 +177,212 @@ namespace _0493_Reverse_Pairs {
 			return validPairs;
 		}
 	};
+
+	// accepted 109ms beat 94%
+	class Solution4
+	{
+		void addToBIT(vector<int>& bit, int index)
+		{
+			while (index < bit.size())
+			{
+				bit[index]++;
+				index = index + (index & (-index));
+			}
+		}
+
+		int getFromBIT(vector<int>& bit, int index)
+		{
+			int total = 0;
+			while (index > 0)
+			{
+				total += bit[index];
+				index = index - (index & (-index));
+			}
+			return total;
+		}
+	public:
+		int reversePairs(vector<int>& nums)
+		{
+			vector<int> originalInputCopy = nums;
+
+			size_t n = nums.size();
+
+			// value to index mapping
+			// value is either "the value of an element in the original array" or "the value of an element in the original array multiplying 2"
+			unordered_map<int64_t, int>m;  // input length maximum is 5 * 10^4, merging two arrays equally long, 2 times that is 10^5, an "int" should be enough
+
+			sort(nums.begin(), nums.end());
+
+			int i = 0, j = 0;
+
+			int64_t original, multiple2;
+
+			original = (int64_t)nums[i];
+			multiple2 = original * 2;
+
+			int64_t previous;
+			int index = 0;
+
+			// Do a merge sort, one array is the sorted original input "nums",
+			// another array consists of every element of nums multiplied by 2.
+			// don't really need to construct the 2nd array
+			// Don't really need to construct the final merged array either,
+			// all I care about is the elements' indices in the merged array.
+			// One extra requirement than a plain merge sort is "no duplicate in the merged array"
+
+			if (original <= multiple2)
+			{
+				m[original] = index++;
+				previous = original;
+				++i;
+				if (i < n) // even have to be defensive here, if input is a 1-element array, need this check here
+					original = (int64_t)nums[i];
+			}
+			else //(multiple2 < original)
+			{
+				m[multiple2] = index++;
+				previous = multiple2;
+				++j;
+				if (j < n)
+					multiple2 = (int64_t)nums[j] * 2;
+			}
+
+			while (i < n && j < n)
+			{
+				if (original <= multiple2)
+				{
+					if (original != previous)
+					{
+						m[original] = index++;
+						previous = original;
+						++i;
+						if (i < n)
+							original = (int64_t)nums[i];
+					}
+					else
+					{
+						++i;
+						if (i < n)
+							original = (int64_t)nums[i];
+					}
+				}
+				else // (multiple2 < original)
+				{
+					if (multiple2 != previous)
+					{
+						m[multiple2] = index++;
+						previous = multiple2;
+						++j;
+						if (j < n)
+							multiple2 = (int64_t)nums[j] * 2;
+					}
+					else
+					{
+						++j;
+						if (j < n)
+							multiple2 = (int64_t)nums[j] * 2;
+					}
+				}
+			}
+
+			while (j < n)
+			{
+				multiple2 = (int64_t)nums[j] * 2;
+
+				if (multiple2 != previous)
+				{
+					m[multiple2] = index++;
+					previous = multiple2;
+					++j;
+				}
+				else
+				{
+					++j;
+				}
+			}
+			
+			while (i < n)
+			{
+				original = (int64_t)nums[i];
+				if (original != previous)
+				{
+					m[original] = index++;
+					previous = original;
+					++i;
+				}
+				else
+				{
+					++i;
+				}
+			}
+			
+			// at this point, "index" is exactly the number of elements added to the unordered_map, don't decrease "index"
+			index;
+
+			vector<int>bit(index + 1);
+			int validPairs = 0;
+			for (int k = 0; k < n; ++k)
+			{
+				auto a = originalInputCopy[k];
+				auto b = (int64_t)a * 2;
+				auto aIndex = m[a] + 1;
+				auto bIndex = m[b] + 1;
+
+				int count = getFromBIT(bit, bIndex);
+
+				validPairs += (k - count);
+
+				addToBIT(bit, aIndex);
+			}
+			return validPairs;
+		}
+	};
+
+
+
+	/*
+	*  augument original array so that each element carries a small structure
+	*  
+	* 
+	* 
+	*       +-- index of this element in the sorted composite array (for definition of "composite array" see Solution3)
+	*       |
+	*       +-- index of this element's multiple of 2 in the sorted composite array
+	*       |
+	*       |
+	*      +---+
+	*      |   |
+	*      +---+
+	*           \
+	*         an element in the original input array
+	* 
+	* 
+	* make yet another copy of the input array:
+	* 
+	*       +-- index of this element in the original array
+	*       |
+	*       |
+	*    +-----+
+	*    |     |
+	*    +-----+
+	* 
+	*   for example if the input is 1 6 9 2 4
+	* 
+	*   make the array this way:
+	*  +---+
+	*  | 0 |  1   2   3   4
+	*  | 1 |  6   9   2   4
+	*  +---+
+	* 
+	*   after sorting by value:
+	*   0  3  4  1  2
+	*   1  2  4  6  9
+	*/
+	class Solution5
+	{
+
+	};
+
 
 	class BruteForseSolution
 	{
@@ -197,7 +407,7 @@ namespace _0493_Reverse_Pairs {
 	void Test_0493_Reverse_Pairs()
 	{
 		//Solution solu;
-		Solution3 solu;
+		Solution4 solu;
 
 		string s;
 
