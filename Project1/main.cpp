@@ -101,7 +101,7 @@ int main()
 
     //_0124_Binary_Tree_Maximum_Path_Sum::Test_0124_Binary_Tree_Maximum_Path_Sum();
 
-    //_0126_Word_Ladder_II::Test_0126_Word_Ladder_II();
+    _0126_Word_Ladder_II::Test_0126_Word_Ladder_II();
 
     //_0127_Word_Ladder::Test_0127_Word_Ladder();
 
@@ -263,7 +263,7 @@ int main()
 
     //_1240_Tiling_Rectangle_With_Fewest_Squares::Test_1239_Tiling_Rectangle_With_Fewest_Squares();
 
-    _1250_Check_Good_Array::Test_1250_Check_Good_Array();
+    //_1250_Check_Good_Array::Test_1250_Check_Good_Array();
 
     //_1284_Min_Flips_Convert_To_Zero_Matrix::Test_1284_Min_Flips_Convert_To_Zero_Matrix();
 
